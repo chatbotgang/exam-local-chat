@@ -1,0 +1,4 @@
+{
+  "exclude": ["node_modules", "dist", "main.ts"],
+  "extends": ["@exam/tsconfig/node/tsconfig"],
+}

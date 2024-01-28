@@ -1,0 +1,19 @@
+# This file is the customized configuration for Semantic PRs GitHub App
+# By default, "Semantic PRs" passes the check either the title is valid or at least one commit message is valid.
+# Turning "titleOnly" on makes the GitHub App only check the title of the PR.
+titleOnly: true
+# More allowed types are added. Must include the default types while adding new ones.
+# See default types in https://github.com/Ezard/semantic-prs/tree/master#configuration
+types:
+  - feat
+  - fix
+  - docs
+  - style
+  - refactor
+  - perf
+  - test
+  - build
+  - ci
+  - chore
+  - revert
+  - release
