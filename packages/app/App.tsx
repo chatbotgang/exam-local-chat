@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import ChatPage from "./src/pages/ChatPage";
+import HomePage from "./src/pages/HomePage";
 
 const darkTheme = createTheme({
   palette: {
@@ -11,7 +12,7 @@ const darkTheme = createTheme({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: "Please input a username:",
+    element: <HomePage />,
   },
   {
     path: "/:userName",
