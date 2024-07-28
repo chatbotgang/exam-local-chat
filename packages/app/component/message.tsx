@@ -1,20 +1,24 @@
 import { Textarea, Typography } from "@exam/component";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { useMessage } from "../hooks";
-import { MessageType } from "../interfaces";
+import { useMessage, useScroll } from "../hooks";
+import { IMessage, ISocketResponse, MessageType } from "../interfaces";
+import { SocketCtx } from "../providers";
 
 const MessageContainerStyled = styled.div`
+  position: relative;
   display: flex;
-  height: calc(100% - 200px);
   flex-direction: column;
-  padding: 24px;
+  height: 100vh;
 `;
 
 const MessageListStyled = styled.div`
   display: flex;
+  height: calc(100vh - 140px);
+  overflow: auto;
   background: black;
   flex-direction: column;
+  padding: 24px;
 `;
 
 const MessageWrapperStyled = styled.div`
@@ -24,7 +28,9 @@ const MessageWrapperStyled = styled.div`
 `;
 
 const MessageInputWrapperStyled = styled.div`
-  height: 200px;
+  width: 100vw;
+  position: absolute;
+  bottom: 0;
 `;
 
 export interface IMessageProps {
@@ -32,10 +38,13 @@ export interface IMessageProps {
 }
 
 export const Message: React.FC<IMessageProps> = ({ name }) => {
+  const { addSocketEventListener, removeSocketEventListener } =
+    useContext(SocketCtx);
   const [inputValue, setInputValue] = useState<string>("");
   const { messages, sendMessage, refresh } = useMessage();
+  const { ref, scrollToBottom } = useScroll();
   const [isPressShift, setIsPressShift] = useState<boolean>(false);
-  console.log(messages);
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       switch (e.key) {
@@ -66,12 +75,24 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
   }, []);
 
   useEffect(() => {
+    const callback = (data: ISocketResponse<IMessage[]>) => {
+      if (data.code === 20000) {
+        scrollToBottom();
+      }
+    };
+    addSocketEventListener("message", callback);
+    return () => {
+      removeSocketEventListener("message", callback);
+    };
+  }, [addSocketEventListener, removeSocketEventListener, scrollToBottom]);
+
+  useEffect(() => {
     refresh();
   }, [refresh]);
 
   return (
     <MessageContainerStyled>
-      <MessageListStyled>
+      <MessageListStyled ref={ref}>
         {messages.map(({ name, type, message, timestamp }, index) => (
           <MessageWrapperStyled key={index}>
             {type === MessageType.SYSTEM && <i>{message}</i>}
