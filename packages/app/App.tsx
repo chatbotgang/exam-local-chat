@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Header from "./src/components/Header";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import ChatPage from "./src/pages/ChatPage";
 
 const darkTheme = createTheme({
   palette: {
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/:userName",
-    element: <Header />,
+    element: <ChatPage />,
   },
 ]);
 
