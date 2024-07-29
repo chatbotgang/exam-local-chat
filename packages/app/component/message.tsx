@@ -184,16 +184,16 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
   return (
     <MessageContainerStyled>
       <MessageListStyled ref={ref}>
-        {messages.map(({ name, type, message, timestamp }, index) => {
+        {messages.map(({ id, name, type, message, timestamp }) => {
           if (type === MessageType.SYSTEM) {
             return (
-              <MessageWrapperStyled key={index}>
+              <MessageWrapperStyled key={id}>
                 <i>{`--- ${name} ${message} ${fromNow(timestamp)}---`}</i>
               </MessageWrapperStyled>
             );
           } else
             return (
-              <MessageWrapperStyled key={index}>
+              <MessageWrapperStyled key={id}>
                 <UserMessageTitleStyled>
                   <Typography>{name}</Typography>
                   <i>{fromNow(timestamp)}</i>
