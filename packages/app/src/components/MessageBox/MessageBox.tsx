@@ -2,6 +2,7 @@ import { Avatar, Box } from "@mui/material";
 import useUserName from "../../hooks/useUserName";
 import { Message } from "../../types/message";
 import dayjs from "dayjs";
+import Markdown from "markdown-to-jsx";
 
 interface MessageBoxProps {
   message: Message;
@@ -31,13 +32,13 @@ export default function MessageBox({ message }: MessageBoxProps) {
           borderRadius: "0.5rem",
           border: "1px solid",
           borderColor: "divider",
-          padding: "0.5rem",
+          paddingX: "1rem",
           backgroundColor: isMyMessage ? "primary.main" : "background.paper",
           color: isMyMessage ? "primary.contrastText" : "text.primary",
           whiteSpace: "pre-wrap",
         }}
       >
-        {text}
+        <Markdown options={{ forceBlock: true }}>{text}</Markdown>
       </Box>
       <Box
         component="div"
