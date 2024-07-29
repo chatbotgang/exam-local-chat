@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
-import Header from "../components/Header";
+import Header from "../components/Header/Header";
 import { useEffect, useRef, useState } from "react";
 import { Message } from "../types/message";
 import { useForm } from "react-hook-form";
 import { Button, Divider, TextField } from "@mui/material";
 import requiredWithTrimmed from "../utils/form/validate/requiredWithTrimmed";
 import useUserName from "../hooks/useUserName";
+import MessageBox from "../components/MessageBox/MessageBox";
 
 interface MessageForm {
   message: string;
@@ -73,9 +74,7 @@ export default function ChatPage() {
       <Header />
       <ChatMessagesWrapper>
         {messages.map((message) => (
-          <div key={message.createdAt.getTime()}>
-            {message.userName}: {message.text}
-          </div>
+          <MessageBox message={message} key={message.createdAt.getTime()} />
         ))}
       </ChatMessagesWrapper>
       <Divider component="div" role="presentation" />

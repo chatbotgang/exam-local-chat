@@ -1,4 +1,4 @@
-import useUserName from "../hooks/useUserName";
+import useUserName from "../../hooks/useUserName";
 import { AppBar, Toolbar } from "@mui/material";
 
 export default function Header() {
