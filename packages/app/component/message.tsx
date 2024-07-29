@@ -97,8 +97,8 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
   }, [scrollToBottom]);
 
   useEffect(() => {
-    // refresh every 59s
-    const interval = setInterval(refresh, 59000);
+    // refresh every minute
+    const interval = setInterval(refresh, 60000);
 
     return () => {
       clearInterval(interval);
