@@ -1,4 +1,7 @@
 {
   "name": "@exam/app",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "dayjs": "^1.11.12"
+  }
 }

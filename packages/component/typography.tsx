@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren } from "react";
 import styled from "styled-components";
 
-const TypographyContainer = styled.p`
+const TypographyContainer = styled.div`
   white-space: pre-wrap;
 `;
 
