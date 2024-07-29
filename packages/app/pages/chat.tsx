@@ -32,7 +32,7 @@ export const Chat: React.FC = () => {
       socket?.emit("message", {
         name: userName,
         type: MessageType.SYSTEM,
-        message: `${userName} joined`,
+        message: `--- ${userName} joined ---`,
       });
     }
   }, [userName, socket]);
@@ -42,7 +42,7 @@ export const Chat: React.FC = () => {
       socket?.emit("message", {
         name: userName,
         type: MessageType.SYSTEM,
-        message: `${userName} left`,
+        message: `--- ${userName} left ---`,
       });
     };
 
