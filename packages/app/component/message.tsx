@@ -1,5 +1,5 @@
+import { dayjs } from "@exam/app/utils";
 import { Textarea, Typography } from "@exam/component";
-import dayjs from "dayjs";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useMessage, useScroll } from "../hooks";
@@ -127,7 +127,11 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
               <MessageWrapperStyled key={index}>
                 <UserMessageTitleStyled>
                   <Typography>{name}</Typography>
-                  <Typography>{dayjs(timestamp).format("HH:mm")}</Typography>
+                  <Typography>
+                    {dayjs().diff(dayjs(timestamp), "hour") > 24
+                      ? dayjs(timestamp).format("YYYY-MM-DD")
+                      : dayjs(timestamp).fromNow()}
+                  </Typography>
                 </UserMessageTitleStyled>
                 <UserMessageContentStyled>
                   <Typography>{message}</Typography>

@@ -24,6 +24,7 @@ export const Chat: React.FC = () => {
     setUserName(name);
   }, []);
 
+  // user join
   useEffect(() => {
     if (userName) {
       socket?.emit("message", {
@@ -34,6 +35,7 @@ export const Chat: React.FC = () => {
     }
   }, [userName, socket]);
 
+  // user leave
   useEffect(() => {
     const logout = () => {
       if (userName) {
