@@ -19,7 +19,6 @@ export default function MessageBox({ message }: MessageBoxProps) {
       component="div"
       sx={{
         display: "flex",
-        // justifyContent: isMyMessage ? "flex-end" : "flex-start",
         flexDirection: isMyMessage ? "row-reverse" : "row",
         gap: "0.5rem",
         padding: "1rem",

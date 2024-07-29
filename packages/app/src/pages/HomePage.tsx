@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import requiredWithTrimmed from "../utils/form/validate/requiredWithTrimmed";
-import useUpdateUserName from "../hooks/updateUserName";
+import useUpdateUserName from "../hooks/useUpdateUserName";
 
 interface UserForm {
   userName: string;

@@ -6,6 +6,8 @@ import { Box, Button, Divider, TextField } from "@mui/material";
 import requiredWithTrimmed from "../utils/form/validate/requiredWithTrimmed";
 import useUserName from "../hooks/useUserName";
 import MessageBox from "../components/MessageBox/MessageBox";
+import useExecuteAfterRender from "../hooks/useExecuteAfterRender";
+import isElementScrolledToBottom from "../utils/dom/isElementScrolledToBottom";
 
 interface MessageForm {
   message: string;
@@ -16,12 +18,26 @@ export default function ChatPage() {
 
   const [messages, setMessages] = useState<Message[]>([]);
 
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = useExecuteAfterRender(() =>
+    bottomRef.current?.scrollIntoView(),
+  );
+
   useEffect(() => {
     channel.current.onmessage = (event) => {
       const message = event.data as Message;
       setMessages((prev) => [...prev, message]);
+
+      const messageAreaElement = bottomRef.current?.parentNode;
+
+      if (
+        messageAreaElement instanceof HTMLElement &&
+        isElementScrolledToBottom(messageAreaElement)
+      ) {
+        scrollToBottom();
+      }
     };
-  }, []);
+  }, [scrollToBottom]);
 
   const userName = useUserName();
 
@@ -44,6 +60,8 @@ export default function ChatPage() {
     setMessages((prev) => [...prev, message]);
 
     reset();
+
+    scrollToBottom();
   });
 
   return (
@@ -61,6 +79,7 @@ export default function ChatPage() {
         {messages.map((message) => (
           <MessageBox message={message} key={message.createdAt.getTime()} />
         ))}
+        <div ref={bottomRef} />
       </Box>
       <Divider component="div" role="presentation" />
       <Box
