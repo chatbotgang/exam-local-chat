@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 interface ITextareaProps {
@@ -29,7 +29,25 @@ export const Textarea: FC<ITextareaProps> = ({
   onKeyDown,
   onKeyUp,
 }) => {
+  const [isComposing, setIsComposing] = useState(false);
   const ref = useRef<HTMLTextAreaElement>(null);
+
+  const handleCompositionStart = useCallback(() => {
+    setIsComposing(true);
+  }, []);
+  const handleCompositionEnd = useCallback(() => {
+    setIsComposing(false);
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      // prevent the KeyDown event being triggered when entering text with Chinese input method
+      if (!isComposing && onKeyDown) {
+        onKeyDown(e);
+      }
+    },
+    [isComposing, onKeyDown],
+  );
 
   useEffect(() => {
     // resize height after typing Enter
@@ -46,7 +64,9 @@ export const Textarea: FC<ITextareaProps> = ({
         ref={ref}
         rows={1}
         onKeyUp={onKeyUp}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
+        onCompositionStart={handleCompositionStart}
+        onCompositionEnd={handleCompositionEnd}
         value={value}
         onChange={onChange}
       />
