@@ -16,6 +16,8 @@ const TextareaContainerStyled = styled.div`
   textarea {
     width: 100%;
     height: 12px;
+    padding-top: 6px;
+    border-radius: 4px;
     border: none;
     outline: none;
     overflow: hidden;

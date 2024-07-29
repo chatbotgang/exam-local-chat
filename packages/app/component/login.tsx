@@ -17,6 +17,7 @@ const LoginContainer = styled.div`
   overflow: auto;
   height: 100%;
   padding: 24px;
+  gap: 8px;
 `;
 
 export const Login: FC<IProps> = ({ onLogin }) => {
@@ -32,7 +33,9 @@ export const Login: FC<IProps> = ({ onLogin }) => {
 
   return (
     <LoginContainer>
-      <Typography>username</Typography>
+      <Typography color="white" fontSize="24px">
+        username
+      </Typography>
       <Input
         onKeyDown={handleKeyDown}
         value={name}

@@ -9,7 +9,7 @@ interface IInputProps {
 }
 
 const InputContainerStyled = styled.div`
-  padding: 24px;
+  padding: 12px;
   border: white 1px solid;
   border-radius: 4px;
 
