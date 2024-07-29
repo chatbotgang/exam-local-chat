@@ -14,21 +14,27 @@ const MessageContainerStyled = styled.div`
 
 const MessageListStyled = styled.div`
   display: flex;
-  height: calc(100vh - 140px);
+  flex-grow: 1;
   overflow: auto;
   background: black;
   flex-direction: column;
   padding: 24px;
+  gap: 8px;
 `;
 
-const MessageWrapperStyled = styled.div`
-  background: black;
+const MessageListItemStyled = styled.div<{ messageType: MessageType }>`
+  border-radius: 4px;
+  width: fit-content;
+  padding: 0 8px;
+  background: ${({ messageType }) =>
+    messageType === MessageType.MESSAGE ? "rgba(255, 255, 255, 0.2)" : "black"};
   flex-direction: column;
   color: white;
 `;
 
 const MessageInputWrapperStyled = styled.div`
   width: 100vw;
+  flex: 1,
   position: absolute;
   bottom: 0;
 `;
@@ -50,11 +56,12 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
       switch (e.key) {
         case "Enter": {
           if (isPressShift) {
-            setInputValue(inputValue + "\n");
+            break;
           } else {
             if (inputValue.trim()) {
               sendMessage(inputValue, name);
               setInputValue("");
+              e.preventDefault();
             }
           }
           break;
@@ -75,6 +82,7 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
   }, []);
 
   useEffect(() => {
+    // scroll to bottom when receive message
     const callback = (data: ISocketResponse<IMessage[]>) => {
       if (data.code === 20000) {
         scrollToBottom();
@@ -94,7 +102,7 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
     <MessageContainerStyled>
       <MessageListStyled ref={ref}>
         {messages.map(({ name, type, message, timestamp }, index) => (
-          <MessageWrapperStyled key={index}>
+          <MessageListItemStyled key={index} messageType={type}>
             {type === MessageType.SYSTEM && <i>{message}</i>}
             {type === MessageType.MESSAGE && (
               <>
@@ -103,7 +111,7 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
                 <Typography>{timestamp}</Typography>
               </>
             )}
-          </MessageWrapperStyled>
+          </MessageListItemStyled>
         ))}
       </MessageListStyled>
       <MessageInputWrapperStyled>
