@@ -17,4 +17,12 @@ declare module "dayjs" {
 originalDayjs.extend(relativeTime);
 originalDayjs.extend(timezone);
 originalDayjs.extend(utc);
-export { originalDayjs as dayjs };
+
+const fromNow = (timestamp?: number) => {
+  const currentTimeStamp = timestamp || originalDayjs();
+  return originalDayjs().diff(originalDayjs(currentTimeStamp), "hour") > 24
+    ? originalDayjs(currentTimeStamp).format("YYYY-MM-DD")
+    : originalDayjs(currentTimeStamp).fromNow();
+};
+
+export { originalDayjs as dayjs, fromNow };
