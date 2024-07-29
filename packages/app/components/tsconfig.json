@@ -1,3 +1,0 @@
-{
-  "extends": ["@exam/tsconfig/react/tsconfig"],
-}
