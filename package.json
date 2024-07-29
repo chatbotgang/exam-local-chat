@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/node": "^20.14.12",
     "i18next": "^23.12.2",
+    "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -23,8 +24,8 @@
     "@commitlint/cli": "^18.5.0",
     "@commitlint/config-conventional": "^18.5.0",
     "@exam/app": "workspace:*",
-    "@exam/component": "workspace:*",
     "@exam/build": "workspace:*",
+    "@exam/component": "workspace:*",
     "@exam/tsconfig": "workspace:*",
     "@total-typescript/ts-reset": "^0.5.1",
     "@tsconfig/node20": "^20.1.2",

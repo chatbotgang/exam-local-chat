@@ -7,11 +7,7 @@ import React, {
   useState,
 } from "react";
 import { io, Socket } from "socket.io-client";
-import {
-  CallbackNameType,
-  ISocketContext,
-  ISocketResponse,
-} from "../interfaces";
+import { CallbackType, ISocketContext, ISocketResponse } from "../interfaces";
 
 const socketUrl = import.meta.env["VITE_SERVER_URL"];
 
@@ -24,7 +20,7 @@ export const SocketProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const addSocketEventListener = useCallback(
     function <T>(
       eventName: string,
-      callbackName: CallbackNameType,
+      callbackName: CallbackType,
       callback: (data: ISocketResponse<T>) => void,
     ): (data: ISocketResponse<T>) => void {
       const eventCallback: (data: ISocketResponse<T>) => void = (
@@ -53,7 +49,7 @@ export const SocketProvider: React.FC<PropsWithChildren> = ({ children }) => {
   );
 
   const removeSocketEventListener = useCallback(
-    function (eventName: string, callbackName: CallbackNameType) {
+    function (eventName: string, callbackName: CallbackType) {
       // remove callback
       socket?.removeListener(eventName, callbackMap.get(callbackName));
     },

@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Login, Message } from "../component";
-import { MessageType } from "../interfaces";
+import { EventType, MessageType } from "../interfaces";
 import { SocketCtx } from "../providers";
 
 const PageContainer = styled.div`
@@ -27,7 +27,7 @@ export const Chat: React.FC = () => {
   // user join
   useEffect(() => {
     if (userName) {
-      socket?.emit("message", {
+      socket?.emit(EventType.MESSAGE, {
         name: userName,
         type: MessageType.SYSTEM,
         message: `joined`,
@@ -39,7 +39,7 @@ export const Chat: React.FC = () => {
   useEffect(() => {
     const logout = () => {
       if (userName) {
-        socket?.emit("message", {
+        socket?.emit(EventType.MESSAGE, {
           name: userName,
           type: MessageType.SYSTEM,
           message: `left`,

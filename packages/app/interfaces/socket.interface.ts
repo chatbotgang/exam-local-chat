@@ -1,19 +1,24 @@
 import { Socket } from "socket.io-client";
 
-export enum CallbackNameType {
+export enum EventType {
+  MESSAGE = "message",
+  REFRESH = "refresh",
+}
+
+export enum CallbackType {
   GET_MESSAGE = "GET_MESSAGE",
-  SCROLL_TO_BOTTOM = "SCROLL_TO_BOTTOM",
+  RECEIVE_NEW_MESSAGE = "RECEIVE_NEW_MESSAGE",
 }
 
 export type ISocketAddEventListenerCallback = <T = undefined>(
   message: string,
-  callbackName: CallbackNameType,
+  callbackName: CallbackType,
   callback: (data: ISocketResponse<T>) => void,
 ) => (data: ISocketResponse<T>) => void;
 
 export type ISocketRemoveEventListenerCallback = (
   message: string,
-  callbackName: CallbackNameType,
+  callbackName: CallbackType,
 ) => void;
 
 export interface ISocketResponse<T = undefined> {

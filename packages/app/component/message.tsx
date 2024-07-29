@@ -1,9 +1,17 @@
 import { fromNow } from "@exam/app/utils";
 import { Textarea, Typography } from "@exam/component";
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { useMessage, useScroll } from "../hooks";
-import { MessageType } from "../interfaces";
+import { CallbackType, EventType, MessageType } from "../interfaces";
+import { SocketCtx } from "../providers";
 
 const MessageContainerStyled = styled.div`
   position: relative;
@@ -25,24 +33,31 @@ const MessageListStyled = styled.div`
 const MessageWrapperStyled = styled.div`
   display: flex;
   border-radius: 4px;
-  width: fit-content;
   background: black;
+  word-break: break-all;
   flex-direction: column;
   color: white;
   gap: 8px;
 `;
 
-export const UserMessageTitleStyled = styled.div`
+const UserMessageTitleStyled = styled.div`
   display: inline-flex;
   gap: 24px;
-  font-weight: bold;
+  justify-content: center;
+  align-items: end;
+
+  div {
+    display: flex;
+    font-weight: bold;
+    font-size: 24px;
+  }
 `;
 
-export const UserMessageContentStyled = styled(MessageWrapperStyled)`
+const UserMessageContentStyled = styled(MessageWrapperStyled)`
   background: rgba(255, 255, 255, 0.2);
   padding: 8px 12px;
   line-height: 28px;
-  font-size: 24px;
+  font-size: 18px;
 `;
 
 const MessageInputWrapperStyled = styled.div`
@@ -52,15 +67,37 @@ const MessageInputWrapperStyled = styled.div`
   bottom: 0;
 `;
 
+const PreviewMessageWrapperStyled = styled.div<{ $bottom: number }>`
+  position: fixed;
+  width: 100vw;
+  padding: 12px;
+  bottom: ${(props) => props.$bottom}px;
+  display: inline-flex;
+  background: black;
+  opacity: 0.8;
+  color: white;
+
+  div {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+`;
+
 export interface IMessageProps {
   name: string;
 }
 
 export const Message: React.FC<IMessageProps> = ({ name }) => {
+  const { addSocketEventListener, removeSocketEventListener } =
+    useContext(SocketCtx);
   const [inputValue, setInputValue] = useState<string>("");
   const { messages, sendMessage, refresh } = useMessage();
-  const { ref, scrollToBottom } = useScroll();
+  const inputWrapperRef = useRef<HTMLDivElement>(null);
+  const { ref, isScrolling, scrollToBottom } = useScroll();
   const [isPressShift, setIsPressShift] = useState<boolean>(false);
+  // receive new message but not at the bottom
+  const [haveNewMessage, setHaveNewMessage] = useState(false);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -70,6 +107,7 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
             break;
           } else {
             if (inputValue.trim()) {
+              scrollToBottom();
               sendMessage(inputValue, name);
               setInputValue("");
               e.preventDefault();
@@ -83,7 +121,7 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
         }
       }
     },
-    [inputValue, isPressShift, name, sendMessage],
+    [inputValue, isPressShift, name, scrollToBottom, sendMessage],
   );
 
   const handleKeyUp = useCallback((e: React.KeyboardEvent) => {
@@ -93,8 +131,31 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [scrollToBottom]);
+    // if not at the bottom and receive new message will scroll to bottom
+    if (!isScrolling && haveNewMessage) {
+      scrollToBottom();
+      setHaveNewMessage(false);
+    }
+  }, [scrollToBottom, isScrolling, haveNewMessage]);
+
+  const handleReceiveMessage = useCallback(() => {
+    setHaveNewMessage(true);
+  }, []);
+
+  useEffect(() => {
+    addSocketEventListener(
+      EventType.MESSAGE,
+      CallbackType.RECEIVE_NEW_MESSAGE,
+      handleReceiveMessage,
+    );
+
+    return () => {
+      removeSocketEventListener(
+        EventType.MESSAGE,
+        CallbackType.RECEIVE_NEW_MESSAGE,
+      );
+    };
+  }, [addSocketEventListener, removeSocketEventListener, handleReceiveMessage]);
 
   useEffect(() => {
     // refresh every minute
@@ -104,6 +165,21 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
       clearInterval(interval);
     };
   }, [refresh]);
+
+  const previewMessage = useMemo(() => {
+    const lastMessage = messages?.[messages.length - 1];
+    if (lastMessage) {
+      return {
+        name: lastMessage?.name,
+        type: lastMessage?.type,
+        message: lastMessage?.message.replace(/\n/g, "\t"),
+        timestamp: lastMessage?.timestamp,
+      };
+    }
+    return null;
+  }, [messages]);
+
+  const showPreviewMessage = isScrolling && haveNewMessage;
 
   return (
     <MessageContainerStyled>
@@ -120,7 +196,7 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
               <MessageWrapperStyled key={index}>
                 <UserMessageTitleStyled>
                   <Typography>{name}</Typography>
-                  <Typography>{fromNow(timestamp)}</Typography>
+                  <i>{fromNow(timestamp)}</i>
                 </UserMessageTitleStyled>
                 <UserMessageContentStyled>
                   <Typography>{message}</Typography>
@@ -129,7 +205,17 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
             );
         })}
       </MessageListStyled>
-      <MessageInputWrapperStyled>
+      <MessageInputWrapperStyled ref={inputWrapperRef}>
+        {showPreviewMessage && previewMessage && (
+          <PreviewMessageWrapperStyled
+            $bottom={inputWrapperRef.current?.scrollHeight || 0}
+            onClick={scrollToBottom}
+          >
+            <Typography>
+              {`${previewMessage.name}  ${previewMessage.message.trim().replace("\t", "")}`}
+            </Typography>
+          </PreviewMessageWrapperStyled>
+        )}
         <Textarea
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}

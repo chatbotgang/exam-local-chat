@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import {
-  CallbackNameType,
+  CallbackType,
+  EventType,
   IMessage,
   ISocketResponse,
   MessageType,
@@ -14,7 +15,17 @@ export const useMessage = () => {
 
   const sendMessage = useCallback(
     (msg: string, name: string) => {
-      socket?.emit("message", {
+      setMessages((messages) => [
+        ...messages,
+        {
+          id: messages.length.toString(),
+          name,
+          message: msg,
+          type: MessageType.MESSAGE,
+          timestamp: Date.now(),
+        },
+      ]);
+      socket?.emit(EventType.MESSAGE, {
         name,
         message: msg,
         type: MessageType.MESSAGE,
@@ -24,7 +35,7 @@ export const useMessage = () => {
   );
 
   const refresh = useCallback(() => {
-    socket?.emit("refresh");
+    socket?.emit(EventType.REFRESH);
   }, [socket]);
 
   useEffect(() => {
@@ -35,13 +46,13 @@ export const useMessage = () => {
     };
 
     addSocketEventListener(
-      "message",
-      CallbackNameType.GET_MESSAGE,
+      EventType.MESSAGE,
+      CallbackType.GET_MESSAGE,
       getMessageDataCallback,
     );
 
     return () => {
-      removeSocketEventListener("message", CallbackNameType.SCROLL_TO_BOTTOM);
+      removeSocketEventListener("message", CallbackType.GET_MESSAGE);
     };
   }, [addSocketEventListener, removeSocketEventListener, socket]);
 
