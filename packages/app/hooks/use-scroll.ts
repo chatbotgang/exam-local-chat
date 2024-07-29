@@ -5,11 +5,9 @@ export const useScroll = () => {
 
   const scrollToBottom = () => {
     // scroll after rendering
-    setTimeout(() => {
-      ref.current?.scrollTo({
-        top: ref.current?.scrollHeight,
-      });
-    }, 0);
+    ref.current?.scrollTo({
+      top: ref.current?.scrollHeight,
+    });
   };
 
   return {

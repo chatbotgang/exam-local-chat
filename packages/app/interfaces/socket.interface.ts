@@ -1,13 +1,19 @@
 import { Socket } from "socket.io-client";
 
+export enum CallbackNameType {
+  GET_MESSAGE = "GET_MESSAGE",
+  SCROLL_TO_BOTTOM = "SCROLL_TO_BOTTOM",
+}
+
 export type ISocketAddEventListenerCallback = <T = undefined>(
   message: string,
+  callbackName: CallbackNameType,
   callback: (data: ISocketResponse<T>) => void,
 ) => (data: ISocketResponse<T>) => void;
 
-export type ISocketRemoveEventListenerCallback = <T = undefined>(
+export type ISocketRemoveEventListenerCallback = (
   message: string,
-  callback: (data: ISocketResponse<T>) => void,
+  callbackName: CallbackNameType,
 ) => void;
 
 export interface ISocketResponse<T = undefined> {

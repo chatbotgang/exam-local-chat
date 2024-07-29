@@ -1,10 +1,9 @@
-import { dayjs } from "@exam/app/utils";
+import { fromNow } from "@exam/app/utils";
 import { Textarea, Typography } from "@exam/component";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useMessage, useScroll } from "../hooks";
-import { IMessage, ISocketResponse, MessageType } from "../interfaces";
-import { SocketCtx } from "../providers";
+import { MessageType } from "../interfaces";
 
 const MessageContainerStyled = styled.div`
   position: relative;
@@ -58,8 +57,6 @@ export interface IMessageProps {
 }
 
 export const Message: React.FC<IMessageProps> = ({ name }) => {
-  const { addSocketEventListener, removeSocketEventListener } =
-    useContext(SocketCtx);
   const [inputValue, setInputValue] = useState<string>("");
   const { messages, sendMessage, refresh } = useMessage();
   const { ref, scrollToBottom } = useScroll();
@@ -96,20 +93,16 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
   }, []);
 
   useEffect(() => {
-    // scroll to bottom when receive message
-    const callback = (data: ISocketResponse<IMessage[]>) => {
-      if (data.code === 20000) {
-        scrollToBottom();
-      }
-    };
-    addSocketEventListener("message", callback);
-    return () => {
-      removeSocketEventListener("message", callback);
-    };
-  }, [addSocketEventListener, removeSocketEventListener, scrollToBottom]);
+    scrollToBottom();
+  }, [scrollToBottom]);
 
   useEffect(() => {
-    refresh();
+    // refresh every 59s
+    const interval = setInterval(refresh, 59000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [refresh]);
 
   return (
@@ -119,7 +112,7 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
           if (type === MessageType.SYSTEM) {
             return (
               <MessageWrapperStyled key={index}>
-                <i>{message}</i>
+                <i>{`--- ${name} ${message} ${fromNow(timestamp)}---`}</i>
               </MessageWrapperStyled>
             );
           } else
@@ -127,11 +120,7 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
               <MessageWrapperStyled key={index}>
                 <UserMessageTitleStyled>
                   <Typography>{name}</Typography>
-                  <Typography>
-                    {dayjs().diff(dayjs(timestamp), "hour") > 24
-                      ? dayjs(timestamp).format("YYYY-MM-DD")
-                      : dayjs(timestamp).fromNow()}
-                  </Typography>
+                  <Typography>{fromNow(timestamp)}</Typography>
                 </UserMessageTitleStyled>
                 <UserMessageContentStyled>
                   <Typography>{message}</Typography>

@@ -1,5 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { IMessage, ISocketResponse, MessageType } from "../interfaces";
+import {
+  CallbackNameType,
+  IMessage,
+  ISocketResponse,
+  MessageType,
+} from "../interfaces";
 import { SocketCtx } from "../providers";
 
 export const useMessage = () => {
@@ -29,10 +34,14 @@ export const useMessage = () => {
       }
     };
 
-    addSocketEventListener("message", getMessageDataCallback);
+    addSocketEventListener(
+      "message",
+      CallbackNameType.GET_MESSAGE,
+      getMessageDataCallback,
+    );
 
     return () => {
-      removeSocketEventListener("message", getMessageDataCallback);
+      removeSocketEventListener("message", CallbackNameType.SCROLL_TO_BOTTOM);
     };
   }, [addSocketEventListener, removeSocketEventListener, socket]);
 
