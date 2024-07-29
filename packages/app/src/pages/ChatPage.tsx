@@ -1,9 +1,8 @@
-import styled from "@emotion/styled";
 import Header from "../components/Header/Header";
 import { useEffect, useRef, useState } from "react";
 import { Message } from "../types/message";
 import { useForm } from "react-hook-form";
-import { Button, Divider, TextField } from "@mui/material";
+import { Box, Button, Divider, TextField } from "@mui/material";
 import requiredWithTrimmed from "../utils/form/validate/requiredWithTrimmed";
 import useUserName from "../hooks/useUserName";
 import MessageBox from "../components/MessageBox/MessageBox";
@@ -11,28 +10,6 @@ import MessageBox from "../components/MessageBox/MessageBox";
 interface MessageForm {
   message: string;
 }
-
-const PageLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-`;
-
-const ChatMessagesWrapper = styled.div`
-  flex-grow: 1;
-  flex-shrink: 1;
-  height: 0;
-  overflow-y: auto;
-  padding: 1rem;
-`;
-
-const ChatInputWrapper = styled.form`
-  display: flex;
-  gap: 0.5rem;
-  align-items: start;
-  padding: 1rem;
-  background-color: light;
-`;
 
 export default function ChatPage() {
   const channel = useRef(new BroadcastChannel("chat"));
@@ -70,15 +47,33 @@ export default function ChatPage() {
   });
 
   return (
-    <PageLayout>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Header />
-      <ChatMessagesWrapper>
+      <Box
+        sx={{
+          flexGrow: 1,
+          flexShrink: 1,
+          height: 0,
+          overflowY: "auto",
+          p: "1rem",
+        }}
+      >
         {messages.map((message) => (
           <MessageBox message={message} key={message.createdAt.getTime()} />
         ))}
-      </ChatMessagesWrapper>
+      </Box>
       <Divider component="div" role="presentation" />
-      <ChatInputWrapper onSubmit={onSubmit}>
+      <Box
+        component="form"
+        sx={{
+          display: "flex",
+          gap: "0.5rem",
+          alignItems: "start",
+          p: "1rem",
+          backgroundColor: "light",
+        }}
+        onSubmit={onSubmit}
+      >
         <TextField
           multiline
           fullWidth
@@ -98,7 +93,7 @@ export default function ChatPage() {
         <Button variant="contained" type="submit">
           Send
         </Button>
-      </ChatInputWrapper>
-    </PageLayout>
+      </Box>
+    </Box>
   );
 }

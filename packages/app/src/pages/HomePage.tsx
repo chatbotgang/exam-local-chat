@@ -1,5 +1,4 @@
-import styled from "@emotion/styled";
-import { Button, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import requiredWithTrimmed from "../utils/form/validate/requiredWithTrimmed";
 import useUpdateUserName from "../hooks/updateUserName";
@@ -7,14 +6,6 @@ import useUpdateUserName from "../hooks/updateUserName";
 interface UserForm {
   userName: string;
 }
-
-const HomePageWrapper = styled.form`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  gap: 0.5rem;
-`;
 
 export default function HomePage() {
   const {
@@ -30,7 +21,17 @@ export default function HomePage() {
   );
 
   return (
-    <HomePageWrapper onSubmit={onSubmit}>
+    <Box
+      component="form"
+      onSubmit={onSubmit}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        gap: "0.5rem",
+      }}
+    >
       <TextField
         error={!!errors.userName}
         label="Name"
@@ -42,6 +43,6 @@ export default function HomePage() {
       <Button variant="contained" type="submit">
         Submit
       </Button>
-    </HomePageWrapper>
+    </Box>
   );
 }
