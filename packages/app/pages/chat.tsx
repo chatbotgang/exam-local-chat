@@ -19,13 +19,10 @@ export const Chat: React.FC = () => {
     sessionStorage.getItem("name") || "",
   );
 
-  const handleLogin = useCallback(
-    (name: string) => {
-      sessionStorage.setItem("name", name);
-      setUserName(name);
-    },
-    [socket],
-  );
+  const handleLogin = useCallback((name: string) => {
+    sessionStorage.setItem("name", name);
+    setUserName(name);
+  }, []);
 
   useEffect(() => {
     if (userName) {
@@ -39,11 +36,13 @@ export const Chat: React.FC = () => {
 
   useEffect(() => {
     const logout = () => {
-      socket?.emit("message", {
-        name: userName,
-        type: MessageType.SYSTEM,
-        message: `--- ${userName} left ---`,
-      });
+      if (userName) {
+        socket?.emit("message", {
+          name: userName,
+          type: MessageType.SYSTEM,
+          message: `--- ${userName} left ---`,
+        });
+      }
     };
 
     window.addEventListener("beforeunload", logout);
@@ -51,7 +50,7 @@ export const Chat: React.FC = () => {
     return () => {
       window.removeEventListener("beforeunload", logout);
     };
-  }, [socket]);
+  }, [socket, userName]);
 
   return (
     <PageContainer>
