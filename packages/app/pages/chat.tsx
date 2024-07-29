@@ -1,8 +1,8 @@
+import { Login, Message } from "@exam/app/components";
+import { EventType, MessageType } from "@exam/app/interfaces";
+import { SocketCtx } from "@exam/app/providers";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Login, Message } from "../component";
-import { EventType, MessageType } from "../interfaces";
-import { SocketCtx } from "../providers";
 
 const PageContainer = styled.div`
   display: flex;

@@ -1,12 +1,12 @@
-import { useCallback, useContext, useEffect, useState } from "react";
 import {
   CallbackType,
   EventType,
   IMessage,
   ISocketResponse,
   MessageType,
-} from "../interfaces";
-import { SocketCtx } from "../providers";
+} from "@exam/app/interfaces";
+import { SocketCtx } from "@exam/app/providers";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 export const useMessage = () => {
   const { socket, addSocketEventListener, removeSocketEventListener } =

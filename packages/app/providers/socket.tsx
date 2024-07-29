@@ -1,3 +1,8 @@
+import {
+  CallbackType,
+  ISocketContext,
+  ISocketResponse,
+} from "@exam/app/interfaces";
 import React, {
   createContext,
   PropsWithChildren,
@@ -7,7 +12,6 @@ import React, {
   useState,
 } from "react";
 import { io, Socket } from "socket.io-client";
-import { CallbackType, ISocketContext, ISocketResponse } from "../interfaces";
 
 const socketUrl = import.meta.env["VITE_SERVER_URL"];
 

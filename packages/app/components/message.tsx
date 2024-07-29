@@ -1,3 +1,6 @@
+import { useMessage, useScroll } from "@exam/app/hooks";
+import { CallbackType, EventType, MessageType } from "@exam/app/interfaces";
+import { SocketCtx } from "@exam/app/providers";
 import { fromNow } from "@exam/app/utils";
 import { Textarea, Typography } from "@exam/component";
 import React, {
@@ -9,9 +12,6 @@ import React, {
   useState,
 } from "react";
 import styled from "styled-components";
-import { useMessage, useScroll } from "../hooks";
-import { CallbackType, EventType, MessageType } from "../interfaces";
-import { SocketCtx } from "../providers";
 
 const MessageContainerStyled = styled.div`
   position: relative;
