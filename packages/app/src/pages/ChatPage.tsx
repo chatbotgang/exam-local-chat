@@ -1,5 +1,5 @@
 import Header from "../components/Header/Header";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Message } from "../types/message";
 import { useForm } from "react-hook-form";
 import { Box, Button, Divider, TextField } from "@mui/material";
@@ -8,23 +8,62 @@ import useUserName from "../hooks/useUserName";
 import MessageBox from "../components/MessageBox/MessageBox";
 import useExecuteAfterRender from "../hooks/useExecuteAfterRender";
 import isElementScrolledToBottom from "../utils/dom/isElementScrolledToBottom";
+import { useBeforeUnload } from "react-router-dom";
 
 interface MessageForm {
   message: string;
 }
 
+interface ReaderData {
+  uuids: string[];
+  reader: string;
+}
+
 export default function ChatPage() {
-  const channel = useRef(new BroadcastChannel("chat"));
+  const userName = useUserName();
+
+  const messageChannel = useRef(new BroadcastChannel("message"));
+  const readChannel = useRef(new BroadcastChannel("read"));
 
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const scrollToBottom = useExecuteAfterRender(() =>
-    bottomRef.current?.scrollIntoView(),
+  useBeforeUnload(
+    useCallback(() => {
+      messageChannel.current.close();
+      readChannel.current.close();
+    }, []),
   );
 
+  const readUnreadMessages = useCallback(() => {
+    const uuids = messages
+      .filter(
+        (message) =>
+          message.userName !== userName && !message.readBy.includes(userName),
+      )
+      .map((message) => message.uuid);
+
+    if (uuids.length) {
+      const data: ReaderData = { uuids, reader: userName };
+      readChannel.current.postMessage(data);
+      setMessages((previous) =>
+        previous.map((message) => {
+          if (uuids.includes(message.uuid)) {
+            return { ...message, isRead: true };
+          }
+          return message;
+        }),
+      );
+    }
+  }, [messages, userName]);
+
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollToBottomCallback = useCallback(() => {
+    bottomRef.current?.scrollIntoView();
+  }, []);
+  const scrollToBottom = useExecuteAfterRender(scrollToBottomCallback);
+
   useEffect(() => {
-    channel.current.onmessage = (event) => {
+    messageChannel.current.onmessage = (event) => {
       const message = event.data as Message;
       setMessages((prev) => [...prev, message]);
 
@@ -37,9 +76,39 @@ export default function ChatPage() {
         scrollToBottom();
       }
     };
-  }, [scrollToBottom]);
+  }, [readUnreadMessages, scrollToBottom]);
 
-  const userName = useUserName();
+  useEffect(() => {
+    readChannel.current.onmessage = (event) => {
+      const { uuids, reader } = event.data as ReaderData;
+
+      setMessages((previous) =>
+        previous.map((message) => {
+          if (
+            message.userName === userName &&
+            uuids.includes(message.uuid) &&
+            !message.readBy.includes(reader)
+          ) {
+            return { ...message, readBy: [...message.readBy, reader] };
+          }
+          return message;
+        }),
+      );
+    };
+  }, [userName]);
+
+  useEffect(() => {
+    if (document.hasFocus()) {
+      readUnreadMessages();
+    }
+  }, [readUnreadMessages]);
+
+  useEffect(() => {
+    window.addEventListener("focus", readUnreadMessages);
+    return () => {
+      window.removeEventListener("focus", readUnreadMessages);
+    };
+  }, [readUnreadMessages, userName]);
 
   const {
     register,
@@ -53,9 +122,11 @@ export default function ChatPage() {
       text: messageForm.message,
       userName,
       createdAt: new Date(),
+      uuid: crypto.randomUUID(),
+      readBy: [userName],
     };
 
-    channel.current.postMessage(message);
+    messageChannel.current.postMessage(message);
 
     setMessages((prev) => [...prev, message]);
 

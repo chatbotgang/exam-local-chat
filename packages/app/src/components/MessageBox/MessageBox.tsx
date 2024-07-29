@@ -3,6 +3,7 @@ import useUserName from "../../hooks/useUserName";
 import { Message } from "../../types/message";
 import dayjs from "dayjs";
 import Markdown from "markdown-to-jsx";
+import condSwitch from "condition-switch";
 
 interface MessageBoxProps {
   message: Message;
@@ -11,9 +12,12 @@ interface MessageBoxProps {
 export default function MessageBox({ message }: MessageBoxProps) {
   const userName = useUserName();
 
-  const { text, userName: userNameOfMessage, createdAt } = message;
+  const { text, userName: userNameOfMessage, createdAt, readBy } = message;
 
   const isMyMessage = userName === userNameOfMessage;
+  const readTimes = readBy.filter(
+    (readByUserName) => readByUserName !== userName,
+  ).length;
 
   return (
     <Box
@@ -46,8 +50,19 @@ export default function MessageBox({ message }: MessageBoxProps) {
           alignSelf: "flex-end",
           color: "text.secondary",
           fontSize: "0.75rem",
+          textAlign: isMyMessage ? "right" : "left",
         }}
       >
+        {condSwitch(
+          [
+            [!isMyMessage, ""],
+            [readTimes === 0, ""],
+            [readTimes === 1, "Read"],
+            [readTimes > 1, `Read ${readTimes}`],
+          ],
+          "",
+        )}
+        <br />
         {dayjs(createdAt).format("YYYY/MM/DD HH:mm:ss")}
       </Box>
     </Box>
