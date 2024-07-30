@@ -1,40 +1,23 @@
-# exam-local-chat
+# 大平台
 
-Local Chat Simulator
+## 啟動專案
 
-## Description
+- `pnpm start`: 自動同時啟動 node server(port: 3001) 與 browser(localhost: 5173)
 
-A local chat for exams.
+## 工具/技術
 
-Please refer to the video: [📽️ Video](https://drive.google.com/file/d/1JnsTEYAk6huxw6Dj0CiHY3k6JUxKw4fm/view?usp=sharing) (It is advisable to opt for downloading due to the video resolution limitations of the Google Drive player.)
+- [Socket.io](https://socket.io/docs/v4/tutorial/introduction)
+- [Styled-Components](https://styled-components.com/docs)
+- [dayjs](https://day.js.org/)
+- [lodash](https://lodash.com/)
 
-## Minimum Requirements
+## 專案結構
 
-- Users can input their names and enter the chat room.
-- Users can input another username when opening a brand new browser tab.
-- If a username has been entered in a browser tab, the name should be kept after refreshing the tab.
-- Names can be duplicated across tabs and are treated as the same user.
-- The scrollbar remains at the bottom unless manually scrolled away from the bottom (consider all possible scenarios).
-- When a message is sent by me (current tab's user), the scrollbar automatically scrolls to the bottom.
-- Pressing <kbd>Enter</kbd> sends the message, and <kbd>Shift</kbd> + <kbd>Enter</kbd> sends line breaks.
-- Messages containing only spaces or line breaks are not allowed to be sent.
-- Showcase and pitch your design enhancements in the pull request.
-
-## Bonus Features
-
-- Unleash your creativity to enhance functionality or improve the user experience.
-
-## Technical Expectations
-
-- Use TypeScript, React hooks, and function components to develop the application.
-- Using third party packages installed with pnpm is welcome; you aren't required to write everything from scratch, but we may ask about why you chose a particular approach.
-- Clean and readable code style is encouraged!
-
-## Git & Solution Submit
-
-- Please fork the `main` branch to work on the application.
-- When the application is ready for review open a pull request to `main` branch using the template provided.
-- Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) style to name your branch, commit(s), and pull request.
-- Team members may leave some comments on your PR as code review; feel welcome to respond and interact there, or send a private message if you prefer.
-
-If you have any questions about the assignment or the process, you are welcome to send an email and ask. Thank you for taking the time to complete this application, and good luck!
+- **exam/app** 主要網頁程式碼
+  - **utils** 工具型程式/各種程式邏輯
+  - **components** 各式復合型元件
+  - **pages** 主要頁面
+  - **providers** react Provider
+  - **hooks** react 共用邏輯
+  - **interfaces** 各種 type / interface 定義檔
+- **exam/component** 底層元件
