@@ -14,7 +14,7 @@ const Header = () => {
   };
 
   return (
-    <div className="h-16 flex justify-end bg-[#4586f0] dark:bg-gray-500">
+    <div className="h-16 flex justify-end bg-[#4586f0] dark:bg-gray-800 grow-0 shrink-0">
       {/* Simple toggle button for dark mode  */}
       <label className="relative inline-flex cursor-pointer select-none items-center ">
         <input
