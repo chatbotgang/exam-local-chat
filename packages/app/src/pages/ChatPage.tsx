@@ -48,7 +48,7 @@ export default function ChatPage() {
       setMessages((previous) =>
         previous.map((message) => {
           if (uuids.includes(message.uuid)) {
-            return { ...message, isRead: true };
+            return { ...message, readBy: [...message.readBy, userName] };
           }
           return message;
         }),
