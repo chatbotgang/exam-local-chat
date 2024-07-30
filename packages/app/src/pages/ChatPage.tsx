@@ -1,14 +1,16 @@
 import Header from "../components/Header/Header";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Message } from "../types/message";
 import { useForm } from "react-hook-form";
-import { Box, Button, Divider, TextField } from "@mui/material";
+import { Box, Button, Divider, IconButton, TextField } from "@mui/material";
 import requiredWithTrimmed from "../utils/form/validate/requiredWithTrimmed";
 import useUserName from "../hooks/useUserName";
 import MessageBox from "../components/MessageBox/MessageBox";
 import useExecuteAfterRender from "../hooks/useExecuteAfterRender";
 import isElementScrolledToBottom from "../utils/dom/isElementScrolledToBottom";
 import { useBeforeUnload } from "react-router-dom";
+import Markdown from "markdown-to-jsx";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface MessageForm {
   message: string;
@@ -117,6 +119,23 @@ export default function ChatPage() {
     reset,
   } = useForm<MessageForm>();
 
+  const messageUuidMap = useMemo(
+    () =>
+      messages.reduce<Record<string, Message>>((acc, message) => {
+        acc[message.uuid] = message;
+        return acc;
+      }, {}),
+    [messages],
+  );
+
+  const [replyToMessageUuid, setReplyToMessageUuid] = useState<string | null>(
+    null,
+  );
+
+  const replyToMessage = replyToMessageUuid
+    ? messageUuidMap[replyToMessageUuid]
+    : null;
+
   const onSubmit = handleSubmit((messageForm) => {
     const message: Message = {
       text: messageForm.message,
@@ -125,6 +144,11 @@ export default function ChatPage() {
       uuid: crypto.randomUUID(),
       readBy: [userName],
     };
+
+    if (replyToMessageUuid) {
+      message["replyTo"] = replyToMessageUuid;
+      setReplyToMessageUuid(null);
+    }
 
     messageChannel.current.postMessage(message);
 
@@ -148,11 +172,45 @@ export default function ChatPage() {
         }}
       >
         {messages.map((message) => (
-          <MessageBox message={message} key={message.createdAt.getTime()} />
+          <MessageBox
+            message={message}
+            key={message.createdAt.getTime()}
+            setReplyTo={setReplyToMessageUuid}
+            replyToMessage={
+              (message.replyTo && messageUuidMap[message.replyTo]) || null
+            }
+          />
         ))}
         <div ref={bottomRef} />
       </Box>
       <Divider component="div" role="presentation" />
+      <Box
+        sx={{
+          display: "flex",
+          p: "1rem",
+          maxWidth: "100vw",
+          alignItems: "center",
+          gap: "0.5rem",
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-all",
+        }}
+      >
+        {replyToMessage && (
+          <>
+            reply to:
+            <Markdown options={{ forceBlock: true }}>
+              {replyToMessage.text}
+            </Markdown>
+            <IconButton
+              aria-label="delete"
+              size="large"
+              onClick={() => setReplyToMessageUuid(null)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </>
+        )}
+      </Box>
       <Box
         component="form"
         sx={{
@@ -160,7 +218,6 @@ export default function ChatPage() {
           gap: "0.5rem",
           alignItems: "start",
           p: "1rem",
-          backgroundColor: "light",
         }}
         onSubmit={onSubmit}
       >

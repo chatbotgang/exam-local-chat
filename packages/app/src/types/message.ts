@@ -4,4 +4,5 @@ export type Message = {
   createdAt: Date;
   uuid: string;
   readBy: string[];
+  replyTo?: string;
 };
