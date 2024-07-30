@@ -5,7 +5,11 @@ enum KeyboardEventKey {
   Enter = "Enter",
 }
 
-const UserForm = () => {
+type UserFromProps = {
+  onUsernameSubmit: (username: string) => void;
+};
+
+const UserForm = ({ onUsernameSubmit }: UserFromProps) => {
   const [username, setUsername] = useState("");
 
   const handleUsernameChange = useCallback(
@@ -16,11 +20,14 @@ const UserForm = () => {
     [],
   );
 
-  const handleUsernameKeydown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === KeyboardEventKey.Enter) {
-      // TODO: handle join room
-    }
-  }, []);
+  const handleUsernameKeydown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === KeyboardEventKey.Enter) {
+        onUsernameSubmit(username);
+      }
+    },
+    [username, onUsernameSubmit],
+  );
 
   return (
     <div className="bg-white dark:bg-black flex justify-center items-center flex-1">
