@@ -30,20 +30,33 @@ export default function MessageBox({ message }: MessageBoxProps) {
       }}
     >
       <Avatar>{userNameOfMessage[0]}</Avatar>
-      <Box
-        component="div"
-        sx={{
-          borderRadius: "0.5rem",
-          border: "1px solid",
-          borderColor: "divider",
-          paddingX: "1rem",
-          backgroundColor: isMyMessage ? "primary.main" : "background.paper",
-          color: isMyMessage ? "primary.contrastText" : "text.primary",
-          whiteSpace: "pre-wrap",
-        }}
-      >
-        <Markdown options={{ forceBlock: true }}>{text}</Markdown>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        {!isMyMessage && (
+          <Box
+            sx={{
+              color: "text.secondary",
+              fontSize: "0.75rem",
+            }}
+          >
+            {userNameOfMessage}
+          </Box>
+        )}
+        <Box
+          component="div"
+          sx={{
+            borderRadius: "0.5rem",
+            border: "1px solid",
+            borderColor: "divider",
+            paddingX: "1rem",
+            backgroundColor: isMyMessage ? "primary.main" : "background.paper",
+            color: isMyMessage ? "primary.contrastText" : "text.primary",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          <Markdown options={{ forceBlock: true }}>{text}</Markdown>
+        </Box>
       </Box>
+
       <Box
         component="div"
         sx={{
