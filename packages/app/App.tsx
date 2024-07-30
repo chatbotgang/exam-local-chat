@@ -2,12 +2,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import ChatPage from "./src/pages/ChatPage";
 import HomePage from "./src/pages/HomePage";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+import { ColorModeContext } from "./src/context/colorModeContext";
+import { useMemo, useState } from "react";
 
 const router = createBrowserRouter([
   {
@@ -21,11 +17,26 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const modeState = useState<"light" | "dark">("light");
+  const [mode] = modeState;
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+      }),
+    [mode],
+  );
+
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <ColorModeContext.Provider value={modeState}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }
 
