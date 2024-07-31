@@ -1,9 +1,7 @@
 // @ts-check
 import { useState, useCallback } from "react";
 
-enum KeyboardEventKey {
-  Enter = "Enter",
-}
+import { KeyboardEventKey } from "../constants/keyboard";
 
 type UserFromProps = {
   onUsernameSubmit: (username: string) => void;
@@ -45,6 +43,7 @@ const UserForm = ({ onUsernameSubmit }: UserFromProps) => {
           value={username}
           onChange={handleUsernameChange}
           onKeyDown={handleUsernameKeydown}
+          placeholder="Enter your username"
         />
       </div>
     </div>
