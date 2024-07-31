@@ -126,27 +126,27 @@ export default function MessageBox({
             </Button>
           </Popover>
         </Box>
-        <Box
-          component="div"
-          sx={{
-            alignSelf: "flex-end",
-            color: "text.secondary",
-            fontSize: "0.75rem",
-            textAlign: isMyMessage ? "right" : "left",
-          }}
-        >
-          {condSwitch(
-            [
-              [!isMyMessage, ""],
-              [readTimes === 0, ""],
-              [readTimes === 1, "Read"],
-              [readTimes > 1, `Read ${readTimes}`],
-            ],
-            "",
-          )}
-          <br />
-          {dayjs(createdAt).format("YYYY/MM/DD HH:mm:ss")}
-        </Box>
+      </Box>
+      <Box
+        component="div"
+        sx={{
+          alignSelf: "flex-end",
+          color: "text.secondary",
+          fontSize: "0.75rem",
+          textAlign: isMyMessage ? "right" : "left",
+        }}
+      >
+        {condSwitch(
+          [
+            [!isMyMessage, ""],
+            [readTimes === 0, ""],
+            [readTimes === 1, "Read"],
+            [readTimes > 1, `Read ${readTimes}`],
+          ],
+          "",
+        )}
+        <br />
+        {dayjs(createdAt).format("YYYY/MM/DD HH:mm:ss")}
       </Box>
     </Box>
   );
