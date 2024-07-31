@@ -8,9 +8,9 @@ import useUserName from "../hooks/useUserName";
 import MessageBox from "../components/MessageBox/MessageBox";
 import useExecuteAfterRender from "../hooks/useExecuteAfterRender";
 import isElementScrolledToBottom from "../utils/dom/isElementScrolledToBottom";
-import { useBeforeUnload } from "react-router-dom";
 import Markdown from "markdown-to-jsx";
 import DeleteIcon from "@mui/icons-material/Delete";
+import useBroadcastChannel from "../hooks/useBroadcastChannel";
 
 interface MessageForm {
   message: string;
@@ -24,17 +24,10 @@ interface ReaderData {
 export default function ChatPage() {
   const userName = useUserName();
 
-  const messageChannel = useRef(new BroadcastChannel("message"));
-  const readChannel = useRef(new BroadcastChannel("read"));
+  const messageChannel = useBroadcastChannel<Message>("message");
+  const readChannel = useBroadcastChannel<ReaderData>("read");
 
   const [messages, setMessages] = useState<Message[]>([]);
-
-  useBeforeUnload(
-    useCallback(() => {
-      messageChannel.current.close();
-      readChannel.current.close();
-    }, []),
-  );
 
   const readUnreadMessages = useCallback(() => {
     const uuids = messages
@@ -46,7 +39,7 @@ export default function ChatPage() {
 
     if (uuids.length) {
       const data: ReaderData = { uuids, reader: userName };
-      readChannel.current.postMessage(data);
+      readChannel.postMessage(data);
       setMessages((previous) =>
         previous.map((message) => {
           if (uuids.includes(message.uuid)) {
@@ -56,7 +49,7 @@ export default function ChatPage() {
         }),
       );
     }
-  }, [messages, userName]);
+  }, [messages, readChannel, userName]);
 
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollToBottomCallback = useCallback(() => {
@@ -65,8 +58,7 @@ export default function ChatPage() {
   const scrollToBottom = useExecuteAfterRender(scrollToBottomCallback);
 
   useEffect(() => {
-    messageChannel.current.onmessage = (event) => {
-      const message = event.data as Message;
+    messageChannel.onmessage((message) => {
       setMessages((prev) => [...prev, message]);
 
       const messageAreaElement = bottomRef.current?.parentNode;
@@ -77,13 +69,11 @@ export default function ChatPage() {
       ) {
         scrollToBottom();
       }
-    };
-  }, [readUnreadMessages, scrollToBottom]);
+    });
+  }, [messageChannel, readUnreadMessages, scrollToBottom]);
 
   useEffect(() => {
-    readChannel.current.onmessage = (event) => {
-      const { uuids, reader } = event.data as ReaderData;
-
+    readChannel.onmessage(({ uuids, reader }) => {
       setMessages((previous) =>
         previous.map((message) => {
           if (
@@ -96,8 +86,8 @@ export default function ChatPage() {
           return message;
         }),
       );
-    };
-  }, [userName]);
+    });
+  }, [readChannel, userName]);
 
   useEffect(() => {
     if (document.hasFocus()) {
@@ -150,7 +140,7 @@ export default function ChatPage() {
       setReplyToMessageUuid(null);
     }
 
-    messageChannel.current.postMessage(message);
+    messageChannel.postMessage(message);
 
     setMessages((prev) => [...prev, message]);
 
