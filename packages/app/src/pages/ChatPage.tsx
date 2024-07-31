@@ -11,6 +11,10 @@ import isElementScrolledToBottom from "../utils/dom/isElementScrolledToBottom";
 import Markdown from "markdown-to-jsx";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useBroadcastChannel from "../hooks/useBroadcastChannel";
+import findUnreadUuid from "../domain/findUnreadUuid";
+import addUserNameToMessageReadBy from "../domain/addUserNameToMessageReadBy";
+import addReaderToMyMessageReadBy from "../domain/addReaderToMyMessageReadBy.";
+import createMessageUuidMap from "../domain/createMessageUuidMap";
 
 interface MessageForm {
   message: string;
@@ -30,23 +34,13 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
 
   const readUnreadMessages = useCallback(() => {
-    const uuids = messages
-      .filter(
-        (message) =>
-          message.userName !== userName && !message.readBy.includes(userName),
-      )
-      .map((message) => message.uuid);
+    const uuids = findUnreadUuid(messages, userName);
 
     if (uuids.length) {
       const data: ReaderData = { uuids, reader: userName };
       readChannel.postMessage(data);
       setMessages((previous) =>
-        previous.map((message) => {
-          if (uuids.includes(message.uuid)) {
-            return { ...message, readBy: [...message.readBy, userName] };
-          }
-          return message;
-        }),
+        addUserNameToMessageReadBy(previous, userName, uuids),
       );
     }
   }, [messages, readChannel, userName]);
@@ -75,22 +69,14 @@ export default function ChatPage() {
   useEffect(() => {
     readChannel.onmessage(({ uuids, reader }) => {
       setMessages((previous) =>
-        previous.map((message) => {
-          if (
-            message.userName === userName &&
-            uuids.includes(message.uuid) &&
-            !message.readBy.includes(reader)
-          ) {
-            return { ...message, readBy: [...message.readBy, reader] };
-          }
-          return message;
-        }),
+        addReaderToMyMessageReadBy(previous, userName, uuids, reader),
       );
     });
   }, [readChannel, userName]);
 
   useEffect(() => {
-    if (document.hasFocus()) {
+    const isFocused = document.hasFocus();
+    if (isFocused) {
       readUnreadMessages();
     }
   }, [readUnreadMessages]);
@@ -110,11 +96,7 @@ export default function ChatPage() {
   } = useForm<MessageForm>();
 
   const messageUuidMap = useMemo(
-    () =>
-      messages.reduce<Record<string, Message>>((acc, message) => {
-        acc[message.uuid] = message;
-        return acc;
-      }, {}),
+    () => createMessageUuidMap(messages),
     [messages],
   );
 
