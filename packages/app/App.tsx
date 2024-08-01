@@ -5,13 +5,13 @@ import ChatRoom from "./components/ChatRoom";
 import useUserLogin from "./hooks/useUserLogin";
 
 const App = () => {
-  const { isLoggedIn, handleUserLogIn } = useUserLogin();
+  const { isLoggedIn, handleUserLogIn, currentUser } = useUserLogin();
 
   return (
     <div className="flex flex-col h-screen">
       <Header />
       {isLoggedIn ? (
-        <ChatRoom />
+        <ChatRoom currentUser={currentUser} />
       ) : (
         <UserForm onUsernameSubmit={handleUserLogIn} />
       )}

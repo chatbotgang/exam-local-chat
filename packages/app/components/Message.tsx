@@ -1,11 +1,4 @@
-import { MessageType } from "../constants/messageType";
-
-type MessageProps = {
-  username: string;
-  messageType: string;
-  timestamp?: number;
-  text?: string;
-};
+import { MessageType, IMessage } from "../constants/message";
 
 const getTimeFormatFromTimestamp = (timestamp: number): string => {
   const date = new Date(timestamp);
@@ -13,7 +6,7 @@ const getTimeFormatFromTimestamp = (timestamp: number): string => {
   return date.toTimeString().slice(0, 8);
 };
 
-const Message = ({ username, messageType, timestamp, text }: MessageProps) => {
+const Message = ({ username, messageType, timestamp, text }: IMessage) => {
   if (messageType === MessageType.Left) {
     return (
       <div className="text-gray-400 mt-2 italic">
@@ -46,7 +39,7 @@ const Message = ({ username, messageType, timestamp, text }: MessageProps) => {
           {getTimeFormatFromTimestamp(timestamp)}
         </div>
       )}
-      <div className="bg-gray-300 dark:bg-gray-500 p-2 rounded-lg w-fit text-gray-800 dark:text-white">
+      <div className="bg-gray-300 dark:bg-gray-500 p-2 rounded-lg w-fit text-gray-800 dark:text-white whitespace-pre-wrap">
         {text}
       </div>
     </div>

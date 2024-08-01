@@ -30,6 +30,12 @@ const ChatInput = ({ sendMessage }: ChatInputProps) => {
 
       if (e.key === KeyboardEventKey.Enter && !KeyPressedMap["Shift"]) {
         e.preventDefault();
+        // not allow to send empty message
+        const trimmedMessage = message.trim();
+        if (!trimmedMessage.length) {
+          return;
+        }
+
         sendMessage(message);
         setMessage("");
 
@@ -50,7 +56,7 @@ const ChatInput = ({ sendMessage }: ChatInputProps) => {
       <textarea
         ref={textareaRef}
         rows={1}
-        className="h-auto w-full border border-[#4586f0] bg-transparent rounded-lg p-2 text-gray-100 resize-none"
+        className="h-auto w-full border border-[#4586f0] bg-transparent rounded-lg p-2 text-gray-800 dark:text-gray-100 resize-none"
         value={message}
         onChange={handleChange}
         onKeyDown={handleKeydown}

@@ -1,26 +1,37 @@
-import { MessageType } from "../constants/messageType";
-
 import Message from "./Message";
 import ChatInput from "./ChatInput";
 
-const ChatRoom = () => {
-  const handleSendMessage = (message: string) => {
-    console.log(message);
+import useMessageAction from "../hooks/useMessages";
+import { IMessage } from "../constants/message";
+
+type ChatRoomProps = {
+  currentUser: string;
+};
+
+const ChatRoom = ({ currentUser }: ChatRoomProps) => {
+  const { sendTextMessage, messages } = useMessageAction({
+    currentUser,
+  });
+
+  const handleTextMessage = (message: string) => {
+    sendTextMessage(message);
+    // TODO: scroll to bottom
   };
 
   return (
     <div className="bg-white dark:bg-black w-screen flex flex-1 flex-col justify-between overflow-hidden">
       <div className="flex-initial overflow-y-auto p-4">
-        <Message username="test1" messageType={MessageType.Joined} />
-        <Message username="test2" messageType={MessageType.Left} />
-        <Message
-          username="test3"
-          messageType={MessageType.Text}
-          timestamp={Date.now()}
-          text="Hello"
-        />
+        {messages.map((message: IMessage) => (
+          <Message
+            key={message.timestamp}
+            username={message.username}
+            messageType={message.messageType}
+            timestamp={message.timestamp}
+            text={message.text}
+          />
+        ))}
       </div>
-      <ChatInput sendMessage={handleSendMessage} />
+      <ChatInput sendMessage={handleTextMessage} />
     </div>
   );
 };

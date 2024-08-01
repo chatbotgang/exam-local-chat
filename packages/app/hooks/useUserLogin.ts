@@ -6,7 +6,7 @@ type useUserLoginReturn = {
   isLoggedIn: boolean;
 };
 
-const useUserLogin = () => {
+const useUserLogin = (): useUserLoginReturn => {
   const [currentUser, setCurrentUser] = useState(
     window.sessionStorage.getItem("username") || "",
   );
@@ -23,7 +23,7 @@ const useUserLogin = () => {
     currentUser,
     handleUserLogIn,
     isLoggedIn,
-  } as useUserLoginReturn;
+  };
 };
 
 export default useUserLogin;
