@@ -27,7 +27,7 @@ const useMessages = ({ currentUser }: useMessagesProps): useMessagesReturn => {
   );
 
   const sendMessage = useCallback(
-    (message: IMessage) => {
+    (message: IMessage): void => {
       const newMessages = [...messages, message];
       bc.postMessage(message);
       setMessages(newMessages);
@@ -38,7 +38,7 @@ const useMessages = ({ currentUser }: useMessagesProps): useMessagesReturn => {
   );
 
   const sendTextMessage = useCallback(
-    (text: string) => {
+    (text: string): void => {
       const textMessage: IMessage = {
         username: currentUser,
         messageType: MessageType.Text,
@@ -50,7 +50,7 @@ const useMessages = ({ currentUser }: useMessagesProps): useMessagesReturn => {
     [currentUser, sendMessage],
   );
 
-  const sendJoinedMessage = useCallback(() => {
+  const sendJoinedMessage = useCallback((): void => {
     const joinedMessage: IMessage = {
       username: currentUser,
       timestamp: Date.now(),
@@ -60,7 +60,7 @@ const useMessages = ({ currentUser }: useMessagesProps): useMessagesReturn => {
     sendMessage(joinedMessage);
   }, [currentUser, sendMessage]);
 
-  const sendLeftMessage = useCallback(() => {
+  const sendLeftMessage = useCallback((): void => {
     const leftMessage: IMessage = {
       username: currentUser,
       timestamp: Date.now(),

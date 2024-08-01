@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import Message from "./Message";
 import ChatInput from "./ChatInput";
 
 import useMessages from "../hooks/useMessages";
+import useParticipants from "../hooks/useParticipants";
 import { IMessage } from "../constants/message";
 
 type ChatRoomProps = {
@@ -17,11 +18,17 @@ const ChatRoom = ({ currentUser }: ChatRoomProps) => {
     useMessages({
       currentUser,
     });
+  const { joinRoom, leaveRoom, getParticipants } = useParticipants();
 
   const handleTextMessage = (text: string) => {
     sendTextMessage(text);
     shouldAutoScrolled.current = true;
   };
+
+  const handleLeftRoom = useCallback(() => {
+    sendLeftMessage();
+    leaveRoom(currentUser);
+  }, [sendLeftMessage, leaveRoom, currentUser]);
 
   useEffect(() => {
     if (historyRef?.current) {
@@ -44,13 +51,20 @@ const ChatRoom = ({ currentUser }: ChatRoomProps) => {
   }, []);
 
   useEffect(() => {
+    const participants: string[] = getParticipants();
+
+    if (participants.find((participant) => participant === currentUser)) {
+      return;
+    }
+
     sendJoinedMessage();
+    joinRoom(currentUser);
   }, []);
 
   useEffect(() => {
-    window.addEventListener("beforeunload", sendLeftMessage);
+    window.addEventListener("beforeunload", handleLeftRoom);
     return () => {
-      window.removeEventListener("beforeunload", sendLeftMessage);
+      window.removeEventListener("beforeunload", handleLeftRoom);
     };
   }, [messages]);
 
