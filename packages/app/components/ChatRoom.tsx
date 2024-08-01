@@ -73,6 +73,7 @@ const ChatRoom = ({ currentUser }: ChatRoomProps) => {
       <div ref={historyRef} className="flex-initial overflow-y-auto p-4">
         {messages.map((message: IMessage) => (
           <Message
+            historyRef={historyRef}
             key={message.timestamp}
             username={message.username}
             messageType={message.messageType}
