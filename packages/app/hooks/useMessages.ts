@@ -1,58 +1,74 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { IMessage, MessageType } from "../constants/message";
 
-type useMessageActionProps = {
+type useMessagesProps = {
   currentUser: string;
 };
 
-type useMessageActionReturn = {
+type useMessagesReturn = {
   sendTextMessage: (message: string) => void;
   sendJoinedMessage: () => void;
   sendLeftMessage: () => void;
   messages: IMessage[];
 };
 
-const DEMO_CHANNEL_NAME = "DEMO";
+const DEMO_CHANNEL_NAME = "DEMO_CHANNEL_NAME";
 const bc: BroadcastChannel = new BroadcastChannel(DEMO_CHANNEL_NAME);
 
-const useMessages = ({
-  currentUser,
-}: useMessageActionProps): useMessageActionReturn => {
-  const [messages, setMessages] = useState<IMessage[]>([]);
+const getMessagesFromLocalStorage = (): IMessage[] => {
+  const messages = localStorage.getItem(DEMO_CHANNEL_NAME);
+  return messages ? (JSON.parse(messages) as IMessage[]) : [];
+};
 
-  const sendTextMessage = (message: string) => {
-    const textMessage: IMessage = {
-      username: currentUser,
-      messageType: MessageType.Text,
-      timestamp: Date.now(),
-      text: message,
-    };
-    bc.postMessage(textMessage);
-    setMessages((prev) => [...prev, textMessage]);
-  };
+const useMessages = ({ currentUser }: useMessagesProps): useMessagesReturn => {
+  const [messages, setMessages] = useState<IMessage[]>(() =>
+    getMessagesFromLocalStorage(),
+  );
 
-  const sendJoinedMessage = () => {
+  const sendMessage = useCallback(
+    (message: IMessage) => {
+      const newMessages = [...messages, message];
+      bc.postMessage(message);
+      setMessages(newMessages);
+      // save to local storage
+      localStorage.setItem(DEMO_CHANNEL_NAME, JSON.stringify(newMessages));
+    },
+    [messages, setMessages],
+  );
+
+  const sendTextMessage = useCallback(
+    (text: string) => {
+      const textMessage: IMessage = {
+        username: currentUser,
+        messageType: MessageType.Text,
+        timestamp: Date.now(),
+        text,
+      };
+      sendMessage(textMessage);
+    },
+    [currentUser, sendMessage],
+  );
+
+  const sendJoinedMessage = useCallback(() => {
     const joinedMessage: IMessage = {
       username: currentUser,
       timestamp: Date.now(),
       messageType: MessageType.Joined,
       text: "",
     };
-    bc.postMessage(joinedMessage);
-    setMessages((prev) => [...prev, joinedMessage]);
-  };
+    sendMessage(joinedMessage);
+  }, [currentUser, sendMessage]);
 
-  const sendLeftMessage = () => {
+  const sendLeftMessage = useCallback(() => {
     const leftMessage: IMessage = {
       username: currentUser,
       timestamp: Date.now(),
       messageType: MessageType.Left,
       text: "",
     };
-    bc.postMessage(leftMessage);
-    setMessages((prev) => [...prev, leftMessage]);
-  };
+    sendMessage(leftMessage);
+  }, [currentUser, sendMessage]);
 
   bc.onmessage = (event) => {
     if (event.data) {

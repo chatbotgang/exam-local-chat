@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import Message from "./Message";
 import ChatInput from "./ChatInput";
 
-import useMessageAction from "../hooks/useMessages";
+import useMessages from "../hooks/useMessages";
 import { IMessage } from "../constants/message";
 
 type ChatRoomProps = {
@@ -13,12 +13,13 @@ type ChatRoomProps = {
 const ChatRoom = ({ currentUser }: ChatRoomProps) => {
   const historyRef = useRef<HTMLDivElement>(null);
   const shouldAutoScrolled = useRef<boolean>(true);
-  const { sendTextMessage, messages } = useMessageAction({
-    currentUser,
-  });
+  const { sendTextMessage, sendJoinedMessage, sendLeftMessage, messages } =
+    useMessages({
+      currentUser,
+    });
 
-  const handleTextMessage = (message: string) => {
-    sendTextMessage(message);
+  const handleTextMessage = (text: string) => {
+    sendTextMessage(text);
     shouldAutoScrolled.current = true;
   };
 
@@ -41,6 +42,17 @@ const ChatRoom = ({ currentUser }: ChatRoomProps) => {
       };
     }
   }, []);
+
+  useEffect(() => {
+    sendJoinedMessage();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", sendLeftMessage);
+    return () => {
+      window.removeEventListener("beforeunload", sendLeftMessage);
+    };
+  }, [messages]);
 
   return (
     <div className="bg-white dark:bg-black w-screen flex flex-1 flex-col justify-between overflow-hidden">

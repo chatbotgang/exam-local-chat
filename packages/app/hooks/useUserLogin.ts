@@ -14,7 +14,7 @@ const useUserLogin = (): useUserLoginReturn => {
   const isLoggedIn: boolean = useMemo(() => !!currentUser, [currentUser]);
 
   const handleUserLogIn = (username: string): void => {
-    setCurrentUser("user");
+    setCurrentUser(username);
 
     window.sessionStorage.setItem("username", username);
   };
