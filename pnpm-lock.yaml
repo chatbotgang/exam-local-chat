@@ -90,7 +90,14 @@ importers:
         specifier: ^5.0.8
         version: 5.0.12(@types/node@20.11.5)
 
-  packages/app: {}
+  packages/app:
+    dependencies:
+      i18next:
+        specifier: ^23.12.2
+        version: 23.12.2
+      react-i18next:
+        specifier: ^15.0.0
+        version: 15.0.0(i18next@23.12.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   packages/build:
     dependencies:
@@ -281,6 +288,13 @@ packages:
     engines: { node: ">=6.9.0" }
     peerDependencies:
       "@babel/core": ^7.0.0-0
+
+  "@babel/runtime@7.25.0":
+    resolution:
+      {
+        integrity: sha512-7dRy4DwXwtzBrPbZflqxnvfxLF8kdZXPkhymtDeFoFqE6ldzjQFgYTtYIFARcLEYDrqfBfYcZt1WqFxRoyC9Rw==,
+      }
+    engines: { node: ">=6.9.0" }
 
   "@babel/template@7.22.15":
     resolution:
@@ -2009,6 +2023,12 @@ packages:
       }
     engines: { node: ">=10" }
 
+  html-parse-stringify@3.0.1:
+    resolution:
+      {
+        integrity: sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==,
+      }
+
   human-signals@2.1.0:
     resolution:
       {
@@ -2030,6 +2050,12 @@ packages:
       }
     engines: { node: ">=14" }
     hasBin: true
+
+  i18next@23.12.2:
+    resolution:
+      {
+        integrity: sha512-XIeh5V+bi8SJSWGL3jqbTEBW5oD6rbP5L+E7dVQh1MNTxxYef0x15rhJVcRb7oiuq4jLtgy2SD8eFlf6P2cmqg==,
+      }
 
   ignore@5.3.0:
     resolution:
@@ -2926,6 +2952,22 @@ packages:
     peerDependencies:
       react: ^18.2.0
 
+  react-i18next@15.0.0:
+    resolution:
+      {
+        integrity: sha512-2O3IgF4zivg57Q6p6i+ChDgJ371IDcEWbuWC6gvoh5NbkDMs0Q+O7RPr4v61+Se32E0V+LmtwePAeqWZW0bi6g==,
+      }
+    peerDependencies:
+      i18next: ">= 23.2.3"
+      react: ">= 16.8.0"
+      react-dom: "*"
+      react-native: "*"
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+
   react-refresh@0.14.0:
     resolution:
       {
@@ -2980,6 +3022,12 @@ packages:
         integrity: sha512-6tDA8g98We0zd0GvVeMT9arEOnTw9qM03L9cJXaCjrip1OO764RDBLBfrB4cwzNGDj5OA5ioymC9GkizgWJDUg==,
       }
     engines: { node: ">=8" }
+
+  regenerator-runtime@0.14.1:
+    resolution:
+      {
+        integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==,
+      }
 
   require-directory@2.1.1:
     resolution:
@@ -3527,6 +3575,13 @@ packages:
       terser:
         optional: true
 
+  void-elements@3.1.0:
+    resolution:
+      {
+        integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==,
+      }
+    engines: { node: ">=0.10.0" }
+
   which@2.0.2:
     resolution:
       {
@@ -3735,6 +3790,10 @@ snapshots:
     dependencies:
       "@babel/core": 7.23.7
       "@babel/helper-plugin-utils": 7.22.5
+
+  "@babel/runtime@7.25.0":
+    dependencies:
+      regenerator-runtime: 0.14.1
 
   "@babel/template@7.22.15":
     dependencies:
@@ -4793,11 +4852,19 @@ snapshots:
     dependencies:
       lru-cache: 6.0.0
 
+  html-parse-stringify@3.0.1:
+    dependencies:
+      void-elements: 3.1.0
+
   human-signals@2.1.0: {}
 
   human-signals@5.0.0: {}
 
   husky@8.0.3: {}
+
+  i18next@23.12.2:
+    dependencies:
+      "@babel/runtime": 7.25.0
 
   ignore@5.3.0: {}
 
@@ -5231,6 +5298,15 @@ snapshots:
       react: 18.2.0
       scheduler: 0.23.0
 
+  react-i18next@15.0.0(i18next@23.12.2)(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+    dependencies:
+      "@babel/runtime": 7.25.0
+      html-parse-stringify: 3.0.1
+      i18next: 23.12.2
+      react: 18.2.0
+    optionalDependencies:
+      react-dom: 18.2.0(react@18.2.0)
+
   react-refresh@0.14.0: {}
 
   react@18.2.0:
@@ -5268,6 +5344,8 @@ snapshots:
     dependencies:
       indent-string: 4.0.0
       strip-indent: 3.0.0
+
+  regenerator-runtime@0.14.1: {}
 
   require-directory@2.1.1: {}
 
@@ -5565,6 +5643,8 @@ snapshots:
     optionalDependencies:
       "@types/node": 20.11.5
       fsevents: 2.3.3
+
+  void-elements@3.1.0: {}
 
   which@2.0.2:
     dependencies:

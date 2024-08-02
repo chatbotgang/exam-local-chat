@@ -4,6 +4,8 @@ import ChatRoom from "./components/ChatRoom";
 
 import useUserLogin from "./hooks/useUserLogin";
 
+import "./i18n";
+
 const App = () => {
   const { isLoggedIn, handleUserLogIn, currentUser } = useUserLogin();
 

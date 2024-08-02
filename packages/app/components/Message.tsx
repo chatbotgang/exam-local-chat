@@ -1,4 +1,6 @@
 import { useRef, useState, useEffect } from "react";
+import { useTranslation, Trans } from "react-i18next";
+
 import { MessageType, IMessage } from "../constants/message";
 
 const getTimeFormatFromTimestamp = (timestamp: number): string => {
@@ -18,6 +20,7 @@ const Message = ({
   timestamp,
   text,
 }: MessageProps) => {
+  const { t } = useTranslation();
   const messageRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const [isInViewPort, setIsInViewPort] = useState(true);
@@ -30,11 +33,14 @@ const Message = ({
     if (messageType === MessageType.Left) {
       return (
         <div className="text-gray-400 italic">
-          {" "}
-          <span className="text-gray-500 dark:text-gray-200">
-            {username}
-          </span>{" "}
-          left{" "}
+          <Trans
+            t={t}
+            i18nKey="LeftMessage"
+            values={{ username }}
+            components={{
+              span: <span className="text-gray-500 dark:text-gray-200" />,
+            }}
+          />
         </div>
       );
     }
@@ -42,11 +48,14 @@ const Message = ({
     if (messageType === MessageType.Joined) {
       return (
         <div className="text-gray-400 italic">
-          {" "}
-          <span className="text-gray-500 dark:text-gray-200">
-            {username}
-          </span>{" "}
-          joined{" "}
+          <Trans
+            t={t}
+            i18nKey="JoinedMessage"
+            values={{ username }}
+            components={{
+              span: <span className="text-gray-500 dark:text-gray-200" />,
+            }}
+          />
         </div>
       );
     }

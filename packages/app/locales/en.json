@@ -1,0 +1,7 @@
+{
+  "UserFormUsername": "Username",
+  "UserFormUsernamePlaceholder": "Enter your username",
+  "ChatInputMessageInputPlaceholder": "Type a message...",
+  "JoinedMessage": "<span>{{username}}</span> joined",
+  "LeftMessage": "<span>{{username}}</span> left"
+}

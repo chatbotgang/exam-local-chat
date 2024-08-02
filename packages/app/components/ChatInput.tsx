@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 import { KeyboardEventKey } from "../constants/keyboard";
 
@@ -11,6 +12,7 @@ const KeyPressedMap: { [key: string]: boolean } = {};
 const TEXTAREA_HEIGHT_LIMIT = 88;
 
 const ChatInput = ({ sendMessage }: ChatInputProps) => {
+  const { t } = useTranslation();
   const [message, setMessage] = useState("");
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -61,7 +63,8 @@ const ChatInput = ({ sendMessage }: ChatInputProps) => {
         onChange={handleChange}
         onKeyDown={handleKeydown}
         onKeyUp={handleKeyUp}
-        placeholder="Type a message..."
+        placeholder={t("ChatInputMessageInputPlaceholder")}
+        autoFocus
       />
     </div>
   );

@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import { SupportedLanguages } from "../constants/supportedLanguages";
 
 const Header = () => {
+  const { i18n } = useTranslation();
   const [isChecked, setIsChecked] = useState(
     document?.documentElement.classList.contains("dark") || false,
   );
@@ -13,10 +17,26 @@ const Header = () => {
     setIsChecked(!isChecked);
   };
 
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(e.target.value);
+  };
   return (
     <div className="h-16 flex justify-end bg-[#4586f0] dark:bg-gray-800 grow-0 shrink-0">
+      <div className="mr-4 inline-flex items-center">
+        <select
+          className="bg-gray-50 border border-gray-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          onChange={handleLanguageChange}
+        >
+          {Object.values(SupportedLanguages).map((language) => (
+            <option key={`language-${language}`} value={language}>
+              {language}
+            </option>
+          ))}
+        </select>
+      </div>
+
       {/* Simple toggle button for dark mode  */}
-      <label className="relative inline-flex cursor-pointer select-none items-center ">
+      <label className="relative inline-flex cursor-pointer select-none items-center">
         <input
           type="checkbox"
           checked={isChecked}

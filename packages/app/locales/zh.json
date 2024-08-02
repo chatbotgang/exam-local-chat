@@ -1,0 +1,7 @@
+{
+  "UserFormUsername": "使用者名稱",
+  "UserFormUsernamePlaceholder": "請輸入您的使用者名稱",
+  "ChatInputMessageInputPlaceholder": "輸入訊息...",
+  "JoinedMessage": "<span>{{username}}</span> 加入了聊天室",
+  "LeftMessage": "<span>{{username}}</span> 離開了聊天室"
+}

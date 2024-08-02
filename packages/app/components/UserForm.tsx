@@ -1,5 +1,6 @@
 // @ts-check
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { KeyboardEventKey } from "../constants/keyboard";
 
@@ -8,6 +9,7 @@ type UserFromProps = {
 };
 
 const UserForm = ({ onUsernameSubmit }: UserFromProps) => {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
 
   const handleUsernameChange = useCallback(
@@ -21,6 +23,7 @@ const UserForm = ({ onUsernameSubmit }: UserFromProps) => {
   const handleUsernameKeydown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === KeyboardEventKey.Enter) {
+        e.preventDefault();
         onUsernameSubmit(username);
       }
     },
@@ -34,7 +37,7 @@ const UserForm = ({ onUsernameSubmit }: UserFromProps) => {
           htmlFor="input-username"
           className="text-gray-800 mb-2 dark:text-gray-100"
         >
-          Username
+          {t("UserFormUsername")}
         </label>
         <input
           id="input-username"
@@ -43,7 +46,8 @@ const UserForm = ({ onUsernameSubmit }: UserFromProps) => {
           value={username}
           onChange={handleUsernameChange}
           onKeyDown={handleUsernameKeydown}
-          placeholder="Enter your username"
+          placeholder={t("UserFormUsernamePlaceholder")}
+          autoFocus
         />
       </div>
     </div>
