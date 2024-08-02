@@ -30,7 +30,7 @@ const MessageListStyled = styled.div`
   gap: 8px;
 `;
 
-const MessageWrapperStyled = styled.div`
+const MessageWrapperStyled = styled.div<{ $alignEnd?: boolean }>`
   display: flex;
   border-radius: 4px;
   background: black;
@@ -38,12 +38,13 @@ const MessageWrapperStyled = styled.div`
   flex-direction: column;
   color: white;
   gap: 8px;
+
+  ${(props) => props.$alignEnd && "align-items: flex-end;"}
 `;
 
 const UserMessageTitleStyled = styled.div`
   display: inline-flex;
   gap: 24px;
-  justify-content: center;
   align-items: end;
 
   div {
@@ -58,6 +59,7 @@ const UserMessageContentStyled = styled(MessageWrapperStyled)`
   padding: 8px 12px;
   line-height: 28px;
   font-size: 18px;
+  width: fit-content;
 `;
 
 const MessageInputWrapperStyled = styled.div`
@@ -184,18 +186,19 @@ export const Message: React.FC<IMessageProps> = ({ name }) => {
   return (
     <MessageContainerStyled>
       <MessageListStyled ref={ref}>
-        {messages.map(({ id, name, type, message, timestamp }) => {
+        {messages.map(({ id, name: _name, type, message, timestamp }) => {
+          const isSelfMessage = _name === name;
           if (type === MessageType.SYSTEM) {
             return (
               <MessageWrapperStyled key={id}>
-                <i>{`--- ${name} ${message} ${fromNow(timestamp)}---`}</i>
+                <i>{`--- ${_name} ${message} ${fromNow(timestamp)}---`}</i>
               </MessageWrapperStyled>
             );
           } else
             return (
-              <MessageWrapperStyled key={id}>
+              <MessageWrapperStyled key={id} $alignEnd={isSelfMessage}>
                 <UserMessageTitleStyled>
-                  <Typography>{name}</Typography>
+                  <Typography>{_name}</Typography>
                   <i>{fromNow(timestamp)}</i>
                 </UserMessageTitleStyled>
                 <UserMessageContentStyled>
