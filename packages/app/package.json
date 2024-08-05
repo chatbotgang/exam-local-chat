@@ -1,4 +1,7 @@
 {
   "name": "@exam/app",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "jotai": "^2.9.1"
+  }
 }
