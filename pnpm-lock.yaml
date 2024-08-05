@@ -1,4 +1,4 @@
-lockfileVersion: "6.0"
+lockfileVersion: "6.1"
 
 settings:
   autoInstallPeers: true
@@ -7,9 +7,6 @@ settings:
 importers:
   .:
     dependencies:
-      "@tsconfig/vite-react":
-        specifier: ^3.0.0
-        version: 3.0.0
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -41,6 +38,9 @@ importers:
       "@tsconfig/strictest":
         specifier: ^2.0.2
         version: 2.0.2
+      "@tsconfig/vite-react":
+        specifier: ^3.0.0
+        version: 3.0.0
       "@types/react":
         specifier: ^18.2.43
         version: 18.2.48
@@ -1244,7 +1244,7 @@ packages:
       {
         integrity: sha512-haOFbphpavQ1+eyQjeqvlz7sRkQue/bS0GvFmraHml31Ufhv+7juUSc8PVe0In7sly+n+5zTLmzc287KciiGXg==,
       }
-    dev: false
+    dev: true
 
   /@types/babel__core@7.20.5:
     resolution:
