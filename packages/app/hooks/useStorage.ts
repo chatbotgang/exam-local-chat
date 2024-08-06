@@ -1,5 +1,6 @@
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import { useMemo } from "react";
 
 type StorageType = "local" | "session";
 
@@ -26,16 +27,17 @@ const createStorageAtom = <T>(
   });
 };
 
-function useStorage<T>(
+export default function useStorage<T>(
   key: string,
   initialValue: T,
   type: StorageType = "local",
 ) {
   const storage = getStorage(type);
-  const storageAtom = createStorageAtom(key, initialValue, storage);
+  const storageAtom = useMemo(
+    () => createStorageAtom(key, initialValue, storage),
+    [key, initialValue, storage],
+  );
   const [value, setValue] = useAtom(storageAtom);
 
   return [value, setValue] as const;
 }
-
-export default useStorage;

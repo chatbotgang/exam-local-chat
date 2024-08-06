@@ -9,4 +9,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "../app"),
     },
   },
+  css: {
+    postcss: path.resolve(__dirname, "../app/postcss.config.cjs"),
+  },
 });
