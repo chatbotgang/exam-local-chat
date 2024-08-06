@@ -1,3 +1,8 @@
 {
   "extends": ["@exam/tsconfig/react/tsconfig"],
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"],
+    },
+  },
 }
