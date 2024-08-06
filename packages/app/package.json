@@ -1,4 +1,7 @@
 {
   "name": "@exam/app",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "usehooks-ts": "^3.1.0"
+  }
 }
