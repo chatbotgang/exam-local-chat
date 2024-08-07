@@ -28,14 +28,18 @@ const MessageInput: FC<MessageInputProps> = ({
 
   const handleSendMessage = (messageContent: string) => {
     const messageText = messageContent.trim();
-    if (messageText.length === 0) return;
+    if (messageText.length === 0) {
+      setMessageContent("");
+      onSetReply(null);
+      return;
+    }
 
     const message = {
       id: generateId(),
       type: MessageType.TEXT,
       main: {
         ...user,
-        content: messageText,
+        content: messageContent,
       },
       reply,
       createdAt: Date.now(),

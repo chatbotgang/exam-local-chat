@@ -5,6 +5,8 @@ import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
 import { User } from "../models/user";
 import { MessageDetail } from "../models/message";
+import { generateId } from "../lib/id";
+import { MessageType } from "../enums/message";
 
 type ChatroomProps = {
   user: User;
@@ -17,14 +19,43 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ block: "end" });
-  }, [messages.length]);
+  const handleSendSystemMessage = useCallback(
+    (systemMessage: string) => {
+      const message = {
+        id: generateId(),
+        type: MessageType.SYSTEM,
+        main: { ...user, content: systemMessage },
+        reply: null,
+        createdAt: Date.now(),
+      };
+      handleSendMessage(message);
+    },
+    [handleSendMessage, user],
+  );
+
+  const handleLeftRoom = useCallback(() => {
+    handleSendSystemMessage(`${user.username} Left`);
+  }, [handleSendSystemMessage, user.username]);
 
   const handleSetReply = useCallback(
     (replyDetail: MessageDetail | null) => setReply(replyDetail),
     [],
   );
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ block: "end" });
+  }, [messages.length]);
+
+  useEffect(() => {
+    handleSendSystemMessage(`${user.username} Joined`);
+  }, [handleSendSystemMessage, user.username]);
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleLeftRoom);
+    return () => {
+      window.removeEventListener("beforeunload", handleLeftRoom);
+    };
+  }, [handleLeftRoom]);
 
   return (
     <div className="w-full h-full bg-slate-800 flex flex-col">
