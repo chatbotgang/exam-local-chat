@@ -1,4 +1,5 @@
 import { FC } from "react";
+import moment from "moment";
 
 import { Message, MessageDetail } from "../models/message";
 import { MessageType } from "../enums/message";
@@ -17,9 +18,7 @@ const MessageItem: FC<MessageItemProps> = ({
   const isMyMessage = username === message.main.username;
 
   return (
-    <div
-      className={`flex gap-2 ${isMyMessage ? "justify-end" : "justify-start"}`}
-    >
+    <>
       {message.type === MessageType.SYSTEM && (
         <>
           <div className="bg-slate-50 bg-opacity-10 w-full text-center rounded-lg p-2">
@@ -30,7 +29,9 @@ const MessageItem: FC<MessageItemProps> = ({
         </>
       )}
       {message.type === MessageType.TEXT && (
-        <>
+        <div
+          className={`flex gap-2 ${isMyMessage ? "justify-end" : "justify-start"}`}
+        >
           <div
             className={`w-8 h-8 overflow-hidden rounded-full flex-shrink-0 ${isMyMessage ? "order-2" : "order-1"}`}
           >
@@ -71,14 +72,19 @@ const MessageItem: FC<MessageItemProps> = ({
               </div>
             )}
             <div
-              className={`bg-slate-100 min-w-32 max-w-60 p-4 rounded-b-xl ${message.reply ? "rounded-t-none" : "rounded-t-xl"} flex flex-col gap-4`}
+              className={`bg-slate-100 min-w-32 max-w-60 p-4 rounded-b-xl ${message.reply ? "rounded-t-none" : "rounded-t-xl"} flex flex-col gap-2`}
             >
               <p className="font-semibold text-slate-800 truncate">
                 {message.main.username}
               </p>
-              <p className="text-md break-words whitespace-pre-wrap text-slate-800 mb-2">
-                {message.main.content}
-              </p>
+              <div>
+                <p className="text-md break-words whitespace-pre-wrap text-slate-800 mb-8">
+                  {message.main.content}
+                </p>
+              </div>
+              <span className="text-xs text-slate-400">
+                {moment(message.createdAt).format("MM/DD HH:mm:ss")}
+              </span>
             </div>
           </div>
           {!isMyMessage && (
@@ -87,9 +93,9 @@ const MessageItem: FC<MessageItemProps> = ({
               onClick={() => onSetReply(message.main)}
             ></div>
           )}
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
