@@ -9,11 +9,12 @@ type MessageInputProps = {
   user: User;
   reply: MessageDetail | null;
   onSendMessage: (message: Message) => void;
-  onSetReply: (replyDetail: MessageDetail) => void;
+  onSetReply: (replyDetail: MessageDetail | null) => void;
 };
 
 const MessageInput: FC<MessageInputProps> = ({
   onSendMessage,
+  onSetReply,
   user,
   reply,
 }) => {
@@ -42,6 +43,7 @@ const MessageInput: FC<MessageInputProps> = ({
 
     onSendMessage(message);
     setMessageContent("");
+    onSetReply(null);
   };
 
   const handleMessageContentKeyDown = (

@@ -34,6 +34,17 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
         username={user.username}
         ref={scrollRef}
       />
+      {reply && (
+        <div className="bg-white bg-opacity-80 py-1 px-2 text-slate-800 flex items-center">
+          <p className="flex-grow truncate">{reply.content}</p>
+          <div
+            className="bg-slate-400 w-5 h-5 rounded-full flex justify-center items-center cursor-pointer flex-shrink-0"
+            onClick={() => handleSetReply(null)}
+          >
+            X
+          </div>
+        </div>
+      )}
       <MessageInput
         onSendMessage={handleSendMessage}
         onSetReply={handleSetReply}
