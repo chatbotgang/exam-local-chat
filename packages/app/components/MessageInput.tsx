@@ -54,7 +54,7 @@ const MessageInput: FC<MessageInputProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-2">
+    <div className="p-2">
       <textarea
         value={messageContent}
         onChange={handleMessageContentChange}

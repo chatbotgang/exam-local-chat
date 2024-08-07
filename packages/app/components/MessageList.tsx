@@ -1,17 +1,21 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 
 import { Message, MessageDetail } from "../models/message";
+import MessageItem from "./MessageItem";
 
 type MessageListProps = {
   messages: Message[];
+  username: string;
   onSetReply: (replyDetail: MessageDetail) => void;
 };
 
-const MessageList: FC<MessageListProps> = ({ messages }) => {
+const MessageList: FC<MessageListProps> = ({ messages, username }) => {
   return (
-    <div>
+    <div className="overflow-y-scroll flex-grow p-4">
       {messages.map((message) => (
-        <div key={message.id}>{message.main.content}</div>
+        <Fragment>
+          <MessageItem message={message} username={username} />
+        </Fragment>
       ))}
     </div>
   );

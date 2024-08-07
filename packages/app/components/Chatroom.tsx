@@ -21,8 +21,12 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
   );
 
   return (
-    <div className="w-full h-full bg-slate-800">
-      <MessageList messages={messages} onSetReply={handleSetReply} />
+    <div className="w-full h-full bg-slate-800 flex flex-col">
+      <MessageList
+        messages={messages}
+        onSetReply={handleSetReply}
+        username={user.username}
+      />
       <MessageInput
         onSendMessage={handleSendMessage}
         onSetReply={handleSetReply}
