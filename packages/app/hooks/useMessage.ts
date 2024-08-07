@@ -14,16 +14,6 @@ export const useMessage = () => {
   const [channel, setChannel] = useState<BroadcastChannel | null>(null);
   const [messages, setMessages] = useState<Message[]>(messagesRecords);
 
-  const handleSendMessage = useCallback(
-    (message: Message) => {
-      if (!channel) return;
-      channel.postMessage(message);
-      setMessagesRecords((prevState) => [...prevState, message]);
-      setMessages((prevState) => [...prevState, message]);
-    },
-    [channel, setMessagesRecords],
-  );
-
   useEffect(() => {
     const channel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
     channel.onmessage = (event) => {
@@ -35,6 +25,16 @@ export const useMessage = () => {
       channel.close();
     };
   }, []);
+
+  const handleSendMessage = useCallback(
+    (message: Message) => {
+      if (!channel) return;
+      channel.postMessage(message);
+      setMessagesRecords((prevState) => [...prevState, message]);
+      setMessages((prevState) => [...prevState, message]);
+    },
+    [channel, setMessagesRecords],
+  );
 
   return {
     handleSendMessage,

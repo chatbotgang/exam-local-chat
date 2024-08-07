@@ -42,7 +42,11 @@ const MessageItem: FC<MessageItemProps> = ({
                 className="object-cover w-full h-full"
               />
             ) : (
-              <div className="bg-slate-400 w-full h-full  m-auto flex justify-center items-center"></div>
+              <img
+                src="/avatar.svg"
+                alt="User Avatar"
+                className="bg-slate-400 w-full h-full  m-auto flex justify-center items-center"
+              />
             )}
           </div>
           <div className={`${isMyMessage ? "order-1" : "order-2"}`}>
@@ -58,7 +62,11 @@ const MessageItem: FC<MessageItemProps> = ({
                       className="object-cover w-full h-full"
                     />
                   ) : (
-                    <div className="bg-slate-400 w-full h-full m-auto flex justify-center items-center"></div>
+                    <img
+                      src="/avatar.svg"
+                      alt="User Avatar"
+                      className="bg-slate-400 w-full h-full m-auto flex justify-center items-center"
+                    />
                   )}
                 </div>
                 <div className="w-10/12">
@@ -77,11 +85,9 @@ const MessageItem: FC<MessageItemProps> = ({
               <p className="font-semibold text-slate-800 truncate">
                 {message.main.username}
               </p>
-              <div>
-                <p className="text-md break-words whitespace-pre-wrap text-slate-800 mb-8">
-                  {message.main.content}
-                </p>
-              </div>
+              <p className="text-md break-words whitespace-pre-wrap text-slate-800 mb-8">
+                {message.main.content}
+              </p>
               <span className="text-xs text-slate-400">
                 {moment(message.createdAt).format("MM/DD HH:mm:ss")}
               </span>
@@ -91,7 +97,9 @@ const MessageItem: FC<MessageItemProps> = ({
             <div
               className="order-3 w-4 h-4 rounded-full bg-slate-400 self-end cursor-pointer"
               onClick={() => onSetReply(message.main)}
-            ></div>
+            >
+              <img src="/arrow.svg" alt="Reply Arrow" />
+            </div>
           )}
         </div>
       )}

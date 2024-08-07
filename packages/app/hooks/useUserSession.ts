@@ -11,20 +11,18 @@ export const useUserSession = () => {
     userAvatar: "",
   });
 
-  const handleSetUser = useCallback((user: User) => setUser(user), [setUser]);
-
   const handleUserLogin = useCallback(
     (username: string) => {
       const member = room[username];
       if (member) {
-        handleSetUser(member);
+        setUser(member);
       } else {
         const newUser = { ...user, username };
         setUser((user) => ({ ...user, username }));
         handleJoinRoom(newUser);
       }
     },
-    [handleJoinRoom, handleSetUser, room, setUser, user],
+    [handleJoinRoom, room, setUser, user],
   );
 
   const handleSetUserAvatar = useCallback(

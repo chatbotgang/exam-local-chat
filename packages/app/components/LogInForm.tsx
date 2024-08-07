@@ -56,9 +56,11 @@ const LogInForm: FC<UserFormProps> = ({
                     className="object-cover w-full h-full"
                   />
                 ) : (
-                  <div className="bg-slate-100 w-full h-full  m-auto flex justify-center items-center">
-                    +
-                  </div>
+                  <img
+                    src="/avatar.svg"
+                    alt="User Avatar"
+                    className="bg-slate-100 w-full h-full  m-auto flex justify-center items-center"
+                  />
                 )}
               </div>
             </div>

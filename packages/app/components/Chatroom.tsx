@@ -14,33 +14,33 @@ type ChatroomProps = {
 };
 
 const Chatroom: FC<ChatroomProps> = ({ user }) => {
-  const { handleLeaveRoom } = useRoom();
   const { handleSendMessage, messages } = useMessage();
+  const { handleLeaveRoom } = useRoom();
 
   const [reply, setReply] = useState<MessageDetail | null>(null);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const handleSendSystemMessage = useCallback(
-    (systemMessage: string) => {
+    (messageDetail: MessageDetail) => {
       const message = {
         id: generateId(),
         type: MessageType.SYSTEM,
-        main: { ...user, content: systemMessage },
+        main: messageDetail,
         reply: null,
         createdAt: Date.now(),
       };
       handleSendMessage(message);
     },
-    [handleSendMessage, user],
+    [handleSendMessage],
   );
 
   const handleRoomJoined = useCallback(() => {
-    handleSendSystemMessage(`${user.username} Joined`);
+    handleSendSystemMessage({ ...user, content: `${user.username} Joined` });
   }, [handleSendSystemMessage, user]);
 
   const handleRoomLeft = useCallback(() => {
-    handleSendSystemMessage(`${user.username} Left`);
+    handleSendSystemMessage({ ...user, content: `${user.username} Left` });
     handleLeaveRoom(user);
   }, [handleLeaveRoom, handleSendSystemMessage, user]);
 
@@ -74,10 +74,10 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
         <div className="bg-white bg-opacity-80 py-1 px-2 text-slate-800 flex items-center">
           <p className="flex-grow truncate">{reply.content}</p>
           <div
-            className="bg-slate-400 w-5 h-5 rounded-full flex justify-center items-center cursor-pointer flex-shrink-0"
+            className="bg-slate-200 hover:bg-slate-100 w-5 h-5 rounded-full flex justify-center items-center cursor-pointer flex-shrink-0 duration-500"
             onClick={() => handleSetReply(null)}
           >
-            X
+            <img src="/close.svg" alt="Close" />
           </div>
         </div>
       )}

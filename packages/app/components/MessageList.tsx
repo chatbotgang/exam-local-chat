@@ -23,7 +23,7 @@ const MessageList = forwardRef<HTMLDivElement, MessageListProps>(
               />
             </Fragment>
           ))}
-          <div className="h-0 m-0" ref={ref}></div>
+          <div className="h-0" ref={ref}></div>
         </div>
       </>
     );
