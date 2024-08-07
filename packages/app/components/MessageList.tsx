@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import { Fragment, forwardRef } from "react";
 
 import { Message, MessageDetail } from "../models/message";
 import MessageItem from "./MessageItem";
@@ -9,16 +9,21 @@ type MessageListProps = {
   onSetReply: (replyDetail: MessageDetail) => void;
 };
 
-const MessageList: FC<MessageListProps> = ({ messages, username }) => {
-  return (
-    <div className="overflow-y-scroll flex-grow p-4">
-      {messages.map((message) => (
-        <Fragment>
-          <MessageItem message={message} username={username} />
-        </Fragment>
-      ))}
-    </div>
-  );
-};
+const MessageList = forwardRef<HTMLDivElement, MessageListProps>(
+  ({ messages, username }, ref) => {
+    return (
+      <>
+        <div className="overflow-y-scroll flex-grow p-4 pb-0 space-y-4">
+          {messages.map((message) => (
+            <Fragment key={message.id}>
+              <MessageItem message={message} username={username} />
+            </Fragment>
+          ))}
+          <div className="h-0 m-0" ref={ref}></div>
+        </div>
+      </>
+    );
+  },
+);
 
 export default MessageList;

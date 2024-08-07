@@ -9,8 +9,7 @@ type MessageItemProps = {
 const MessageItem: FC<MessageItemProps> = ({ message, username }) => {
   return (
     <div
-      key={message.id}
-      className={`mb-4 flex ${username === message.main.username ? "justify-end" : "justify-start"}`}
+      className={`flex ${username === message.main.username ? "justify-end" : "justify-start"}`}
     >
       <div className="bg-slate-100 w-fit p-4 rounded-md max-w-60 flex flex-col gap-4">
         <div className="flex items-center gap-2">

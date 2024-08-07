@@ -1,4 +1,4 @@
-import { FC, useState, useCallback } from "react";
+import { FC, useState, useEffect, useCallback, useRef } from "react";
 
 import { useMessage } from "../hooks/useMessage";
 import MessageInput from "./MessageInput";
@@ -15,6 +15,12 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
 
   const [reply, setReply] = useState<MessageDetail | null>(null);
 
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ block: "end" });
+  }, [messages.length]);
+
   const handleSetReply = useCallback(
     (replyDetail: MessageDetail | null) => setReply(replyDetail),
     [],
@@ -26,6 +32,7 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
         messages={messages}
         onSetReply={handleSetReply}
         username={user.username}
+        ref={scrollRef}
       />
       <MessageInput
         onSendMessage={handleSendMessage}
