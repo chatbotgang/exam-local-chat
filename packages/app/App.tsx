@@ -15,7 +15,7 @@ function App() {
           userAvatar={user.userAvatar}
         />
       ) : (
-        <Chatroom />
+        <Chatroom user={user} />
       )}
     </div>
   );

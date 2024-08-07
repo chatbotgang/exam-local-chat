@@ -1,10 +1,22 @@
 import { FC, useState, ChangeEvent, KeyboardEvent } from "react";
 
+import { Message, MessageDetail } from "../models/message";
+import { User } from "../models/user";
+import { MessageType } from "../enums/message";
+import { generateId } from "../lib/id";
+
 type MessageInputProps = {
-  //
+  user: User;
+  reply: MessageDetail | null;
+  onSendMessage: (message: Message) => void;
+  onSetReply: (replyDetail: MessageDetail) => void;
 };
 
-const MessageInput: FC<MessageInputProps> = () => {
+const MessageInput: FC<MessageInputProps> = ({
+  onSendMessage,
+  user,
+  reply,
+}) => {
   const [messageContent, setMessageContent] = useState("");
   const [isInputtingMandarin, setIsInputtingMandarin] = useState(false);
 
@@ -13,13 +25,31 @@ const MessageInput: FC<MessageInputProps> = () => {
     setMessageContent(textContent);
   };
 
+  const handleSendMessage = (messageContent: string) => {
+    const messageText = messageContent.trim();
+    if (messageText.length === 0) return;
+
+    const message = {
+      id: generateId(),
+      type: MessageType.TEXT,
+      main: {
+        ...user,
+        content: messageText,
+      },
+      reply,
+      createdAt: Date.now(),
+    };
+
+    onSendMessage(message);
+    setMessageContent("");
+  };
+
   const handleMessageContentKeyDown = (
     e: KeyboardEvent<HTMLTextAreaElement>,
   ) => {
     if (e.key === "Enter" && !e.shiftKey && !isInputtingMandarin) {
       e.preventDefault();
-      console.log(messageContent);
-      //   handleSendText();
+      handleSendMessage(messageContent);
     }
   };
 
