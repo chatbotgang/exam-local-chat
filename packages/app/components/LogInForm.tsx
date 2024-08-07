@@ -1,11 +1,4 @@
-import {
-  FC,
-  useState,
-  useRef,
-  useEffect,
-  ChangeEvent,
-  KeyboardEvent,
-} from "react";
+import { FC, useState, ChangeEvent, KeyboardEvent } from "react";
 
 import { readDataUriFromFile } from "../lib/file";
 
@@ -21,12 +14,6 @@ const LogInForm: FC<UserFormProps> = ({
   userAvatar,
 }) => {
   const [username, setUsername] = useState("");
-
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const inputVal = e.target.value;
@@ -69,7 +56,7 @@ const LogInForm: FC<UserFormProps> = ({
                     className="object-cover w-full h-full"
                   />
                 ) : (
-                  <div className="bg-slate-50 w-full h-full  m-auto flex justify-center items-center">
+                  <div className="bg-slate-100 w-full h-full  m-auto flex justify-center items-center">
                     +
                   </div>
                 )}
@@ -84,7 +71,6 @@ const LogInForm: FC<UserFormProps> = ({
           <input
             type="text"
             id="username"
-            ref={inputRef}
             className="py-2 px-4 rounded-md focus:outline-slate-400"
             autoComplete="off"
             placeholder="enter your username"
@@ -92,6 +78,7 @@ const LogInForm: FC<UserFormProps> = ({
             onChange={handleUsernameChange}
             maxLength={30}
             onKeyDown={handleUsernameKeyDown}
+            autoFocus
           />
         </div>
       </div>
