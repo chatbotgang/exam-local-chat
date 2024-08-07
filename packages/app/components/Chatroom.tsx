@@ -1,6 +1,7 @@
 import { FC, useState, useEffect, useCallback, useRef } from "react";
 
 import { useMessage } from "../hooks/useMessage";
+import { useRoom } from "../hooks/useRoom";
 import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
 import { User } from "../models/user";
@@ -13,6 +14,7 @@ type ChatroomProps = {
 };
 
 const Chatroom: FC<ChatroomProps> = ({ user }) => {
+  const { handleLeaveRoom } = useRoom();
   const { handleSendMessage, messages } = useMessage();
 
   const [reply, setReply] = useState<MessageDetail | null>(null);
@@ -33,9 +35,14 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
     [handleSendMessage, user],
   );
 
-  const handleLeftRoom = useCallback(() => {
+  const handleRoomJoined = useCallback(() => {
+    handleSendSystemMessage(`${user.username} Joined`);
+  }, [handleSendSystemMessage, user]);
+
+  const handleRoomLeft = useCallback(() => {
     handleSendSystemMessage(`${user.username} Left`);
-  }, [handleSendSystemMessage, user.username]);
+    handleLeaveRoom(user);
+  }, [handleLeaveRoom, handleSendSystemMessage, user]);
 
   const handleSetReply = useCallback(
     (replyDetail: MessageDetail | null) => setReply(replyDetail),
@@ -47,15 +54,13 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
   }, [messages.length]);
 
   useEffect(() => {
-    handleSendSystemMessage(`${user.username} Joined`);
-  }, [handleSendSystemMessage, user.username]);
+    handleRoomJoined();
+  }, [handleRoomJoined]);
 
   useEffect(() => {
-    window.addEventListener("beforeunload", handleLeftRoom);
-    return () => {
-      window.removeEventListener("beforeunload", handleLeftRoom);
-    };
-  }, [handleLeftRoom]);
+    window.addEventListener("beforeunload", handleRoomLeft);
+    return () => window.removeEventListener("beforeunload", handleRoomLeft);
+  }, [handleRoomLeft]);
 
   return (
     <div className="w-full h-full bg-slate-800 flex flex-col">

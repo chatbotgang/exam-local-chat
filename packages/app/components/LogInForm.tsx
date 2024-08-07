@@ -3,13 +3,13 @@ import { FC, useState, ChangeEvent, KeyboardEvent } from "react";
 import { readDataUriFromFile } from "../lib/file";
 
 type UserFormProps = {
-  onSetUsername: (username: string) => void;
+  onUserLogin: (username: string) => void;
   onSetUserAvatar: (userAvatar: string) => void;
   userAvatar: string;
 };
 
 const LogInForm: FC<UserFormProps> = ({
-  onSetUsername,
+  onUserLogin,
   onSetUserAvatar,
   userAvatar,
 }) => {
@@ -23,7 +23,7 @@ const LogInForm: FC<UserFormProps> = ({
   const handleUsernameKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      onSetUsername(username);
+      onUserLogin(username);
       setUsername("");
     }
   };

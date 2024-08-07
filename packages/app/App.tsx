@@ -3,14 +3,14 @@ import Chatroom from "./components/Chatroom";
 import { useUserSession } from "./hooks/useUserSession";
 
 function App() {
-  const { handleSetUsername, handleSetUserAvatar, user, isUserLogin } =
+  const { handleUserLogin, handleSetUserAvatar, user, isUserLogin } =
     useUserSession();
 
   return (
     <div className="w-screen h-screen">
       {!isUserLogin ? (
         <LogInForm
-          onSetUsername={handleSetUsername}
+          onUserLogin={handleUserLogin}
           onSetUserAvatar={handleSetUserAvatar}
           userAvatar={user.userAvatar}
         />
