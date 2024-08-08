@@ -1,4 +1,10 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "prettier.prettierPath": "./node_modules/prettier/index.cjs"
+  "prettier.prettierPath": "./node_modules/prettier/index.cjs",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
+  }
 }
