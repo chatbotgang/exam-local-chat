@@ -1,5 +1,11 @@
+import Header from "./components/Header";
+
 function App() {
-  return <h1 className="text-red-500">Hello Tailwindcss</h1>;
+  return (
+    <>
+      <Header />
+    </>
+  );
 }
 
 export default App;
