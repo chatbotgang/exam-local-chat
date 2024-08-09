@@ -2,7 +2,7 @@ import ChatHistory from "@/components/chat/ChatHistory";
 import useChatHistory from "@/hooks/useChatHistory";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import usePersistentCallback from "@/hooks/usePersistentCallback";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ChatRoom() {
@@ -15,6 +15,19 @@ export default function ChatRoom() {
   if (!curUserName) {
     navigate("/");
   }
+
+  useEffect(() => {
+    if (curUserName) {
+      addChatMessage(`${curUserName} joined`, "system");
+    }
+    const handleLeftRoom = () => {
+      addChatMessage(`${curUserName} left`, "system");
+    };
+    window.addEventListener("beforeunload", handleLeftRoom);
+    return () => {
+      window.removeEventListener("beforeunload", handleLeftRoom);
+    };
+  }, [curUserName]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);

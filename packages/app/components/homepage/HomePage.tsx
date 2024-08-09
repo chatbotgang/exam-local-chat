@@ -1,4 +1,3 @@
-import useChatHistory from "@/hooks/useChatHistory";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import usePersistentCallback from "@/hooks/usePersistentCallback";
 import { TextField } from "@mui/material";
@@ -6,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const { curUserName, setCurUserName } = useCurrentUser();
-  const { addChatMessage } = useChatHistory();
   const navigate = useNavigate();
 
   if (curUserName) {
@@ -17,8 +15,6 @@ export default function HomePage() {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
         setCurUserName(e.currentTarget.value);
-        addChatMessage(`${e.currentTarget.value} joined`, "system");
-        navigate("/chat");
       }
     },
   );
