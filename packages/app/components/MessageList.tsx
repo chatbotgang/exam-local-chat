@@ -13,7 +13,10 @@ const MessageList = forwardRef<HTMLDivElement, MessageListProps>(
   ({ messages, username, onSetReply }, ref) => {
     return (
       <>
-        <div className="overflow-y-scroll flex-grow p-4 pb-0 space-y-4">
+        <div
+          className="overflow-y-scroll flex-grow p-4 pb-0 space-y-4"
+          data-testid="message-list"
+        >
           {messages.map((message) => (
             <Fragment key={message.id}>
               <MessageItem

@@ -1,4 +1,10 @@
 {
+  "compilerOptions": {
+    "jsx": "react",
+    "types": ["vitest/globals"],
+  },
+  "moduleResolution": "bundler",
+  "include": ["setupTests.ts"],
   "exclude": ["node_modules", "dist", "main.ts"],
   "extends": ["@exam/tsconfig/node/tsconfig"],
 }

@@ -5,7 +5,8 @@
     "build": "pnpm run --filter @exam/build build",
     "dev": "pnpm run --filter @exam/build dev",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "pnpm run --filter @exam/build test"
   },
   "dependencies": {
     "react": "^18.2.0",

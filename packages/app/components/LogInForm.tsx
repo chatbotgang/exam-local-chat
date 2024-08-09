@@ -43,10 +43,11 @@ const LogInForm: FC<UserFormProps> = ({
             id="avatar-upload"
             type="file"
             accept="image/png, image/jpe, image/jpeg, image/jpg"
-            style={{ display: "none" }}
+            className="hidden"
             onChange={handleUserAvatarChange}
+            data-testid="avatar-upload"
           />
-          <label htmlFor="avatar-upload" style={{ cursor: "pointer" }}>
+          <label htmlFor="avatar-upload" className="cursor-pointer">
             <div className="border border-solid border-white rounded-full p-1">
               <div className="w-20 h-20 overflow-hidden rounded-full">
                 {userAvatar ? (
