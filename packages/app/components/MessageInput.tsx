@@ -1,23 +1,23 @@
 import { FC, useState, ChangeEvent, KeyboardEvent } from "react";
 
 import { Message, MessageDetail } from "../models/message";
+import { User } from "../models/user";
 import { MessageType } from "../enums/message";
 import { generateId } from "../lib/id";
-import { useUserSession } from "../hooks/useUserSession";
 
 type MessageInputProps = {
+  user: User;
   reply: MessageDetail | null;
-  onSetReply: (replyDetail: MessageDetail | null) => void;
   onSendMessage: (message: Message) => void;
+  onSetReply: (replyDetail: MessageDetail | null) => void;
 };
 
 const MessageInput: FC<MessageInputProps> = ({
   onSendMessage,
   onSetReply,
+  user,
   reply,
 }) => {
-  const { user } = useUserSession();
-
   const [messageContent, setMessageContent] = useState("");
   const [isInputtingMandarin, setIsInputtingMandarin] = useState(false);
 
