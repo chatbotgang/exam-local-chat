@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import { THEME } from "../constants/localStorage";
 
 export default function DarkModSwitcher() {
   const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
-    const theme = localStorage.getItem("theme");
+    const theme = localStorage.getItem(THEME);
     if (
       theme === "dark" ||
       (theme === null &&
@@ -22,10 +23,10 @@ export default function DarkModSwitcher() {
     setIsChecked(!isChecked);
     if (event.target.checked) {
       document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      localStorage.setItem(THEME, "dark");
     } else {
       document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
+      localStorage.setItem(THEME, "light");
     }
   }
   return (
