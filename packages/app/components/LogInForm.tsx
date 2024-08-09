@@ -1,18 +1,12 @@
 import { FC, useState, ChangeEvent, KeyboardEvent } from "react";
 
 import { readDataUriFromFile } from "../lib/file";
+import { useUserSession } from "../hooks/useUserSession";
 
-type UserFormProps = {
-  onUserLogin: (username: string) => void;
-  onSetUserAvatar: (userAvatar: string) => void;
-  userAvatar: string;
-};
+const LogInForm: FC = () => {
+  const { handleUserLogin, handleSetUserAvatar, user } = useUserSession();
+  const { userAvatar } = user;
 
-const LogInForm: FC<UserFormProps> = ({
-  onUserLogin,
-  onSetUserAvatar,
-  userAvatar,
-}) => {
   const [username, setUsername] = useState("");
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +17,7 @@ const LogInForm: FC<UserFormProps> = ({
   const handleUsernameKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      onUserLogin(username);
+      handleUserLogin(username);
       setUsername("");
     }
   };
@@ -32,7 +26,7 @@ const LogInForm: FC<UserFormProps> = ({
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
     const dataUri = await readDataUriFromFile(file);
-    onSetUserAvatar(dataUri);
+    handleSetUserAvatar(dataUri);
   };
 
   return (

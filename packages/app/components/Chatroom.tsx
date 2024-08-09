@@ -1,25 +1,20 @@
-import { FC, useState, useEffect, useCallback, useRef } from "react";
+import { FC, useState, useEffect, useCallback } from "react";
 
 import { useMessage } from "../hooks/useMessage";
 import { useRoom } from "../hooks/useRoom";
 import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
-import { User } from "../models/user";
 import { MessageDetail } from "../models/message";
 import { generateId } from "../lib/id";
 import { MessageType } from "../enums/message";
+import { useUserSession } from "../hooks/useUserSession";
 
-type ChatroomProps = {
-  user: User;
-};
-
-const Chatroom: FC<ChatroomProps> = ({ user }) => {
-  const { handleSendMessage, messages } = useMessage();
+const Chatroom: FC = () => {
+  const { user } = useUserSession();
+  const { handleSendMessage } = useMessage();
   const { handleLeaveRoom } = useRoom();
 
   const [reply, setReply] = useState<MessageDetail | null>(null);
-
-  const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const handleSendSystemMessage = useCallback(
     (messageDetail: MessageDetail) => {
@@ -50,10 +45,6 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
   );
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ block: "end" });
-  }, [messages.length]);
-
-  useEffect(() => {
     handleRoomJoined();
   }, [handleRoomJoined]);
 
@@ -64,12 +55,7 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
 
   return (
     <div className="w-full h-full bg-slate-800 flex flex-col">
-      <MessageList
-        messages={messages}
-        onSetReply={handleSetReply}
-        username={user.username}
-        ref={scrollRef}
-      />
+      <MessageList onSetReply={handleSetReply} />
       {reply && (
         <div className="bg-white bg-opacity-80 py-1 px-2 text-slate-800 flex items-center">
           <p className="flex-grow truncate">{reply.content}</p>
@@ -84,7 +70,6 @@ const Chatroom: FC<ChatroomProps> = ({ user }) => {
       <MessageInput
         onSendMessage={handleSendMessage}
         onSetReply={handleSetReply}
-        user={user}
         reply={reply}
       />
     </div>
