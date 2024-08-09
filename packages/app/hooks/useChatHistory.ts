@@ -1,5 +1,5 @@
 import useStorage from "@/hooks/useStorage";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import useCurrentUser from "./useCurrentUser";
 import usePersistentCallback from "./usePersistentCallback";
 
@@ -23,10 +23,7 @@ const useChatHistory = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [index, setIndex] = useState<number>(0);
 
-  const hasMore = useMemo(
-    () => storedChatHistory.length > (index + 1) * LOAD_MORE_COUNT,
-    [index],
-  );
+  const hasMore = storedChatHistory.length > (index + 1) * LOAD_MORE_COUNT;
 
   const addChatMessage = (
     message: string,

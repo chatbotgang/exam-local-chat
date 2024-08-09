@@ -1,23 +1,27 @@
-import useStorage from "@/hooks/useStorage";
+import useChatHistory from "@/hooks/useChatHistory";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import usePersistentCallback from "@/hooks/usePersistentCallback";
 import { TextField } from "@mui/material";
-import { type KeyboardEventHandler, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
-  const [sessionData, setSessionData] = useStorage("username", "", "session");
+  const { curUserName, setCurUserName } = useCurrentUser();
+  const { addChatMessage } = useChatHistory();
   const navigate = useNavigate();
-  const ref = useRef(null);
 
-  if (sessionData) {
+  if (curUserName) {
     navigate("/chat");
   }
 
-  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === "Enter") {
-      setSessionData(e.currentTarget.value);
-      navigate("/chat");
-    }
-  };
+  const handleKeyDown = usePersistentCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        setCurUserName(e.currentTarget.value);
+        addChatMessage(`${e.currentTarget.value} joined`, "system");
+        navigate("/chat");
+      }
+    },
+  );
 
   return (
     <div className="flex-1 flex justify-center items-center">
@@ -45,7 +49,10 @@ export default function HomePage() {
         </picture>
       </div>
       <div className="bg-black bg-opacity-50 p-1 md:p-4 lg:p-10 rounded-md">
-        <TextField label="User Name" ref={ref} onKeyDown={handleKeyDown} />
+        <TextField
+          label="User Name"
+          InputProps={{ onKeyDown: handleKeyDown }}
+        />
       </div>
     </div>
   );
