@@ -6,28 +6,41 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ChatRoom() {
-  const { curUserName } = useCurrentUser();
+  const { curUserName, joinChat, participants, quitChat } = useCurrentUser();
   const { addChatMessage } = useChatHistory();
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
-
-  if (!curUserName) {
-    navigate("/");
-  }
+  const hasJoinedRef = useRef(false);
 
   useEffect(() => {
-    if (curUserName) {
-      addChatMessage(`${curUserName} joined`, "system");
+    if (!curUserName) {
+      navigate("/");
     }
-    const handleLeftRoom = () => {
-      addChatMessage(`${curUserName} left`, "system");
+  }, [curUserName, navigate]);
+
+  useEffect(() => {
+    const handleJoinRoom = () => {
+      if (!hasJoinedRef.current && curUserName) {
+        joinChat(curUserName);
+        hasJoinedRef.current = true;
+        if (!participants.includes(curUserName)) {
+          addChatMessage(`${curUserName} Joined`, "system");
+        }
+      }
     };
+    const handleLeftRoom = () => {
+      quitChat();
+      if (participants.filter((x) => x === curUserName).length === 1) {
+        addChatMessage(`${curUserName} Left`, "system");
+      }
+    };
+    handleJoinRoom();
     window.addEventListener("beforeunload", handleLeftRoom);
     return () => {
       window.removeEventListener("beforeunload", handleLeftRoom);
     };
-  }, [curUserName]);
+  }, [curUserName, participants]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);

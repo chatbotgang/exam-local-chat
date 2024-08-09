@@ -8,6 +8,7 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   if (curUserName) {
+    console.log(curUserName);
     navigate("/chat");
   }
 
