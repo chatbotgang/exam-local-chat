@@ -1,7 +1,8 @@
-import useStorage from "./useStorage";
+import { usernameAtom } from "@/atoms/user";
+import { useAtom } from "jotai";
 
 export default function useCurrentUser() {
-  const [curUserName, setCurUserName] = useStorage("username", "", "session");
+  const [curUserName, setCurUserName] = useAtom(usernameAtom);
   return {
     curUserName,
     setCurUserName,
