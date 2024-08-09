@@ -1,13 +1,15 @@
 import ChatHistory from "@/components/chat/ChatHistory";
 import useChatHistory from "@/hooks/useChatHistory";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import useParticipants from "@/hooks/useParticipants";
 import usePersistentCallback from "@/hooks/usePersistentCallback";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function ChatRoom() {
-  const { curUserName, joinChat, participants, quitChat } = useCurrentUser();
+  const { curUserName } = useCurrentUser();
   const { addChatMessage } = useChatHistory();
+  const { joinChat, participants, quitChat } = useParticipants();
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
@@ -22,23 +24,14 @@ export default function ChatRoom() {
   useEffect(() => {
     const handleJoinRoom = () => {
       if (!hasJoinedRef.current && curUserName) {
-        joinChat(curUserName);
         hasJoinedRef.current = true;
-        if (!participants.includes(curUserName)) {
-          addChatMessage(`${curUserName} Joined`, "system");
-        }
-      }
-    };
-    const handleLeftRoom = () => {
-      quitChat();
-      if (participants.filter((x) => x === curUserName).length === 1) {
-        addChatMessage(`${curUserName} Left`, "system");
+        joinChat();
       }
     };
     handleJoinRoom();
-    window.addEventListener("beforeunload", handleLeftRoom);
+    window.addEventListener("beforeunload", quitChat);
     return () => {
-      window.removeEventListener("beforeunload", handleLeftRoom);
+      window.removeEventListener("beforeunload", quitChat);
     };
   }, [curUserName, participants]);
 
