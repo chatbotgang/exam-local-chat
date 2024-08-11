@@ -3,6 +3,7 @@ import { CurrentUserContext } from "./Contexts";
 import Header from "./components/Header";
 import UsernameInput from "./components/UsernameInput";
 import { USERNAME } from "./constants/sessionStorage";
+import ChatRoom from "./components/ChatRoom";
 
 function App() {
   const [currentUser, setCurrentUser] = useState<string | null>(null);
@@ -29,11 +30,7 @@ function App() {
       <Header />
       <main className="container mx-auto px-2 sm:px-6 lg:px-8">
         <CurrentUserContext.Provider value={currentUserContextValue}>
-          {currentUser === null ? (
-            <UsernameInput />
-          ) : (
-            <div className="text-gray-900 dark:text-white">ChatRoom</div>
-          )}
+          {currentUser === null ? <UsernameInput /> : <ChatRoom />}
         </CurrentUserContext.Provider>
       </main>
     </>
