@@ -1,7 +1,27 @@
-import { useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { CurrentUserContext } from "../Contexts";
+import { useBroadcastChannel } from "../hooks/useBroadcastChannel";
+import { MESSAGES } from "../constants/localStorage";
 
+const CHANNEL_NAME = "exam-local-chat-channel";
+
+type MessageData = {
+  user: string;
+  message: string;
+  timestamp: number;
+  status: "Joined" | "Left" | undefined;
+};
 export default function ChatRoom() {
-  const [message, setMessage] = useState("");
+  const currentUserContext = useContext(CurrentUserContext);
+
+  const { data, post } = useBroadcastChannel<MessageData, MessageData>({
+    name: CHANNEL_NAME,
+  });
+
+  const [message, setMessage] = useState<string>("");
+  const [localTimestamp, setLocalTimestamp] = useState<number>(0);
+  const [messageDataList, setMessageDataList] = useState<MessageData[]>([]);
+  const messagesWrapperRef = useRef<HTMLDivElement | null>(null);
   const contenteditableRef = useRef<HTMLDivElement | null>(null);
 
   function handleInput(event: React.FormEvent<HTMLDivElement>) {
@@ -18,26 +38,114 @@ export default function ChatRoom() {
 
       const isOnlySpacesOrLineBreaks =
         message.replace(/[\s\r\n]+/g, "").length === 0;
+
       if (!isOnlySpacesOrLineBreaks) {
-        contenteditableRef.current.innerHTML = "";
+        handlePostMessageData({
+          message: contenteditableRef.current.innerHTML,
+          status: undefined,
+        });
         setMessage("");
-        // TODO: send message to chat room
+        contenteditableRef.current.innerHTML = "";
       }
     }
   }
 
+  const handlePostMessageData = useCallback(
+    (messageData: Omit<MessageData, "user" | "timestamp">) => {
+      const timestamp = Date.now();
+      const data: MessageData = {
+        user: currentUserContext?.currentUser ?? "",
+        message: messageData.message,
+        timestamp,
+        status: messageData.status,
+      };
+      post(data);
+      setMessageDataList((list) => {
+        const messages = [...list, data];
+        localStorage.setItem(MESSAGES, JSON.stringify(messages));
+        return messages;
+      });
+      setLocalTimestamp(timestamp);
+    },
+    [currentUserContext?.currentUser, post],
+  );
+
+  useEffect(() => {
+    // Initialize message data list
+    const messages = localStorage.getItem(MESSAGES);
+    if (messages !== null) {
+      try {
+        setMessageDataList(JSON.parse(messages) as MessageData[]);
+      } catch (error) {
+        setMessageDataList([]);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    // Get data from the channel and add to message data list
+    if (data !== undefined) {
+      setMessageDataList((dataList) => [...dataList, data]);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    // Handle user joined
+    // FIXME: trigger twice
+    handlePostMessageData({
+      message: "",
+      status: "Joined",
+    });
+  }, [handlePostMessageData]);
+
+  useEffect(() => {
+    function handleUserLeft() {
+      handlePostMessageData({
+        message: "",
+        status: "Left",
+      });
+    }
+
+    window.addEventListener("beforeunload", handleUserLeft);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUserLeft);
+    };
+  }, [handlePostMessageData]);
+
+  // When a message is sent by me (current tab's user), the scrollbar automatically scrolls to the bottom
+  useEffect(() => {
+    if (messagesWrapperRef.current !== null) {
+      messagesWrapperRef.current.scrollTop =
+        messagesWrapperRef.current.scrollHeight;
+    }
+  }, [localTimestamp]);
+
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="w-full mt-6 flex flex-col">
-        <div className="h-64 overflow-x-hidden overflow-y-auto">
+      <div className="w-full flex flex-col">
+        <div
+          ref={messagesWrapperRef}
+          className="h-64 my-6 overflow-x-hidden overflow-y-auto"
+        >
           <div className="flex flex-col">
-            <div>
-              <span className="text-green-500">Name</span>
-              <span className="ml-1 text-gray-500 text-xs">
-                Today at 3:05 PM
-              </span>
-            </div>
-            <div className="dark:text-white">Hello</div>
+            {messageDataList.map((item, index) => (
+              <div key={index}>
+                <div>
+                  <span className="text-green-500 text-lg">{item.user}</span>
+                  <span className="ml-1 text-gray-500 text-sm">
+                    {item.status}
+                  </span>
+                  <span className="ml-1 text-gray-500 text-xs">
+                    {new Date(item.timestamp).toLocaleTimeString()}
+                  </span>
+                </div>
+                <div
+                  className="dark:text-white"
+                  dangerouslySetInnerHTML={{ __html: item.message }}
+                />
+              </div>
+            ))}
           </div>
         </div>
         <div
