@@ -7,16 +7,14 @@ import ChatRoom from "./components/ChatRoom";
 
 function App() {
   const [currentUser, setCurrentUser] = useState<string | null>(null);
-  useEffect(() => {
-    const username = sessionStorage.getItem(USERNAME);
-    if (username !== null) {
-      setCurrentUser(username);
-    }
-  }, []);
+
   const login = useCallback((username: string) => {
-    sessionStorage.setItem(USERNAME, username);
-    setCurrentUser(username);
+    setCurrentUser(() => {
+      sessionStorage.setItem(USERNAME, username);
+      return username;
+    });
   }, []);
+
   const currentUserContextValue = useMemo(
     () => ({
       currentUser,
@@ -24,6 +22,13 @@ function App() {
     }),
     [currentUser, login],
   );
+
+  useEffect(() => {
+    const username = sessionStorage.getItem(USERNAME);
+    if (username !== null) {
+      setCurrentUser(username);
+    }
+  }, []);
 
   return (
     <>
