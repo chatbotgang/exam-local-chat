@@ -4,6 +4,7 @@
   "scripts": {
     "build": "pnpm run --filter @exam/build build",
     "dev": "pnpm run --filter @exam/build dev",
+    "preview": "pnpm run --filter @exam/build preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prepare": "husky install"
   },
