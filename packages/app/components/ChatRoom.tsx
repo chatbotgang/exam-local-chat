@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { CurrentUserContext } from "../Contexts";
 import { useBroadcastChannel } from "../hooks/useBroadcastChannel";
 import { MESSAGES } from "../constants/localStorage";
+import { useLocalStorage } from "usehooks-ts";
 
 const CHANNEL_NAME = "exam-local-chat-channel";
 
@@ -13,7 +14,12 @@ type MessageData = {
 };
 export default function ChatRoom() {
   const currentUserContext = useContext(CurrentUserContext);
+  const currentUser = currentUserContext?.currentUser ?? "";
 
+  const [messagesValue, setMessagesValue] = useLocalStorage<MessageData[]>(
+    MESSAGES,
+    [],
+  );
   const { data, post } = useBroadcastChannel<MessageData, MessageData>({
     name: CHANNEL_NAME,
   });
@@ -54,44 +60,37 @@ export default function ChatRoom() {
     (messageData: Omit<MessageData, "user" | "timestamp">) => {
       const timestamp = Date.now();
       const data: MessageData = {
-        user: currentUserContext?.currentUser ?? "",
+        user: currentUser,
         message: messageData.message,
         timestamp,
         status: messageData.status,
       };
       post(data);
-      setMessageDataList((list) => {
-        const messages = [...list, data];
-        localStorage.setItem(MESSAGES, JSON.stringify(messages));
-        return messages;
+      setMessageDataList((prevDataList) => {
+        setMessagesValue([...prevDataList, data]);
+        return [...prevDataList, data];
       });
       setLocalTimestamp(timestamp);
     },
-    [currentUserContext?.currentUser, post],
+    [currentUser, setMessagesValue, post],
   );
 
   useEffect(() => {
     // Initialize message data list
-    const messages = localStorage.getItem(MESSAGES);
-    if (messages !== null) {
-      try {
-        setMessageDataList(JSON.parse(messages) as MessageData[]);
-      } catch (error) {
-        setMessageDataList([]);
-      }
+    if (messagesValue !== undefined) {
+      setMessageDataList(messagesValue);
     }
-  }, []);
+  }, [messagesValue]);
 
   useEffect(() => {
     // Get data from the channel and add to message data list
     if (data !== undefined) {
-      setMessageDataList((dataList) => [...dataList, data]);
+      setMessageDataList((prevDataList) => [...prevDataList, data]);
     }
   }, [data]);
 
   useEffect(() => {
     // Handle user joined
-    // FIXME: trigger twice
     handlePostMessageData({
       message: "",
       status: "Joined",

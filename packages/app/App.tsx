@@ -3,17 +3,22 @@ import { CurrentUserContext } from "./Contexts";
 import Header from "./components/Header";
 import UsernameInput from "./components/UsernameInput";
 import { USERNAME } from "./constants/sessionStorage";
+import { useSessionStorage } from "usehooks-ts";
 import ChatRoom from "./components/ChatRoom";
 
 function App() {
+  const [userNameValue, setUserNameValue] = useSessionStorage(USERNAME, "");
   const [currentUser, setCurrentUser] = useState<string>("");
 
-  const login = useCallback((username: string) => {
-    setCurrentUser(() => {
-      sessionStorage.setItem(USERNAME, username);
-      return username;
-    });
-  }, []);
+  const login = useCallback(
+    (username: string) => {
+      setCurrentUser(() => {
+        setUserNameValue(username);
+        return username;
+      });
+    },
+    [setUserNameValue],
+  );
 
   const currentUserContextValue = useMemo(
     () => ({
@@ -24,11 +29,8 @@ function App() {
   );
 
   useEffect(() => {
-    const username = sessionStorage.getItem(USERNAME);
-    if (username !== null) {
-      setCurrentUser(username);
-    }
-  }, []);
+    setCurrentUser(userNameValue);
+  }, [userNameValue]);
 
   return (
     <>
