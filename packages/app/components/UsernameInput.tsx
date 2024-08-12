@@ -3,14 +3,14 @@ import { CurrentUserContext } from "../Contexts";
 
 export default function UsernameInput() {
   const currentUserContext = useContext(CurrentUserContext);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState<string>("");
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setUsername(event.target.value.trim());
   }
   function handleKeyUpEnter(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
-      if (username !== undefined && username.length > 0) {
+      if (username.length > 0) {
         currentUserContext?.login(username);
       }
     }
