@@ -8,7 +8,7 @@ export default function UsernameInput() {
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setUsername(event.target.value.trim());
   }
-  function handleKeyUpEnter(event: React.KeyboardEvent<HTMLInputElement>) {
+  function handleKeyUp(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       if (username.length > 0) {
         currentUserContext?.login(username);
@@ -31,7 +31,7 @@ export default function UsernameInput() {
             id="username-input"
             value={username}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            onKeyUp={handleKeyUpEnter}
+            onKeyUp={handleKeyUp}
             onChange={handleChange}
           />
         </div>
