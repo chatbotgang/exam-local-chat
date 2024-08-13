@@ -121,43 +121,41 @@ export default function ChatRoom() {
   }, [localTimestamp]);
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="w-full flex flex-col">
-        <div
-          ref={messagesWrapperRef}
-          className="h-64 my-6 overflow-x-hidden overflow-y-auto"
-        >
-          <div className="flex flex-col">
-            {messageDataList.map((item, index) => (
-              <div key={index}>
-                <div>
-                  <span className="text-green-500 text-lg">{item.user}</span>
-                  <span className="ml-1 text-gray-500 text-sm">
-                    {item.status}
-                  </span>
-                  <span className="ml-1 text-gray-500 text-xs">
-                    {new Date(item.timestamp).toLocaleTimeString()}
-                  </span>
-                </div>
-                <div
-                  className="dark:text-white"
-                  dangerouslySetInnerHTML={{ __html: item.message }}
-                />
+    <div className="w-full">
+      <div
+        ref={messagesWrapperRef}
+        className="h-64 my-6 overflow-x-hidden overflow-y-auto"
+      >
+        <div className="flex flex-col">
+          {messageDataList.map((item, index) => (
+            <div key={index}>
+              <div>
+                <span className="text-green-500 text-lg">{item.user}</span>
+                <span className="ml-1 text-gray-500 text-sm">
+                  {item.status}
+                </span>
+                <span className="ml-1 text-gray-500 text-xs">
+                  {new Date(item.timestamp).toLocaleTimeString()}
+                </span>
               </div>
-            ))}
-          </div>
+              <div
+                className="dark:text-white"
+                dangerouslySetInnerHTML={{ __html: item.message }}
+              />
+            </div>
+          ))}
         </div>
-        <div
-          ref={contenteditableRef}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 empty:before:content-[attr(aria-placeholder)] empty:before:text-gray-500"
-          contentEditable
-          suppressContentEditableWarning
-          aria-placeholder="Type your message"
-          onInput={handleInput}
-          onKeyUp={handleKeyUp}
-          onKeyDown={handleKeyDown}
-        />
       </div>
+      <div
+        ref={contenteditableRef}
+        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 empty:before:content-[attr(aria-placeholder)] empty:before:text-gray-500"
+        contentEditable
+        suppressContentEditableWarning
+        aria-placeholder="Type your message"
+        onInput={handleInput}
+        onKeyUp={handleKeyUp}
+        onKeyDown={handleKeyDown}
+      />
     </div>
   );
 }

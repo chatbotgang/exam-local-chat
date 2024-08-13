@@ -35,7 +35,7 @@ function App() {
   return (
     <>
       <Header />
-      <main className="container mx-auto px-2 sm:px-6 lg:px-8">
+      <main className="container mx-auto px-2 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
         <CurrentUserContext.Provider value={currentUserContextValue}>
           {currentUser === "" ? <UsernameInput /> : <ChatRoom />}
         </CurrentUserContext.Provider>
