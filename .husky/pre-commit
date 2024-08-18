@@ -1,4 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# 顯式設置 pnpm 的路徑
+export PATH="/Users/ethan/.nvm/versions/node/v20.16.0/bin:$PATH"
+
+# 執行 pnpm
 pnpm exec lint-staged
