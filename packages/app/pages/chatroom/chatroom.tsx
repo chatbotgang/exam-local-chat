@@ -22,7 +22,7 @@ const Chatroom: FC<ChatroomProps> = ({ username }) => {
 
     e.preventDefault();
     sendMessage();
-    scrollToBottom();
+    setTimeout(() => scrollToBottom());
   };
 
   const sendMessage = () => {
@@ -61,7 +61,10 @@ const Chatroom: FC<ChatroomProps> = ({ username }) => {
   }, [messages, isStickToBottom]);
 
   return (
-    <div style={{ backgroundColor: "black" }}>
+    <div
+      ref={bottomRef}
+      style={{ backgroundColor: "black", paddingBottom: "180px" }}
+    >
       {messages.map((m) => {
         if (m.user === "SYSTEM") {
           return (
@@ -95,7 +98,6 @@ const Chatroom: FC<ChatroomProps> = ({ username }) => {
           </div>
         );
       })}
-      <div ref={bottomRef} style={{ height: "120px" }}></div>
       <div
         style={{
           position: "fixed",
