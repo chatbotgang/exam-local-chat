@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Login from "./pages/login/login";
 import Chatroom from "./pages/chatroom/chatroom";
-import useChatMessages from "./pages/chatroom/useChatMessages";
+import { useChatMessages } from "./hooks";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);

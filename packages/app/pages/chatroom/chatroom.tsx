@@ -1,6 +1,5 @@
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-import useChatMessages from "./useChatMessages";
-import useScrollToBottom from "./useStickToBottom";
+import { useChatMessages, useScrollToBottom } from "../../hooks";
 
 type ChatroomProps = {
   username: string;

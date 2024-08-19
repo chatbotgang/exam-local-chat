@@ -29,6 +29,7 @@ const useStickToBottom = () => {
         return;
       }
 
+      // prevent script scrolling cause setIsStickToBottom to false
       if (isScrollingUp()) {
         setIsStickToBottom(false);
       }
