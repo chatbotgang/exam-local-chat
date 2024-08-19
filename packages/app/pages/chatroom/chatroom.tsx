@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import useChatMessages from "./useChatMessages";
+import useScrollToBottom from "./useStickToBottom";
 
 type ChatroomProps = {
   username: string;
@@ -8,11 +9,9 @@ type ChatroomProps = {
 const Chatroom: FC<ChatroomProps> = ({ username }) => {
   const [inputValue, setInputValue] = useState("");
   const [isComposing, setIsComposing] = useState(false);
-  const [isAtBottom, setIsAtBottom] = useState(true);
-  const [lastScrollTop, setLastScrollTop] = useState(0);
   const { messages, addMessage } = useChatMessages();
+  const { bottomRef, scrollToBottom, isStickToBottom } = useScrollToBottom();
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
@@ -43,11 +42,6 @@ const Chatroom: FC<ChatroomProps> = ({ username }) => {
     setInputValue("");
   };
 
-  const scrollToBottom = () => {
-    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-    setIsAtBottom(true);
-  };
-
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(Number(timestamp));
 
@@ -60,43 +54,12 @@ const Chatroom: FC<ChatroomProps> = ({ username }) => {
   };
 
   useEffect(() => {
-    if (isAtBottom) scrollToBottom();
-  }, [messages, isAtBottom]);
+    textAreaRef.current?.focus();
+  }, []);
 
   useEffect(() => {
-    const isScrollingUp = () => {
-      const { scrollTop } = document.documentElement;
-
-      if (scrollTop === lastScrollTop) return false;
-
-      const status = scrollTop < lastScrollTop;
-      setLastScrollTop(scrollTop);
-      return status;
-    };
-
-    const handleScroll = () => {
-      if (!isAtBottom) {
-        const { scrollTop, scrollHeight, clientHeight } =
-          document.documentElement;
-
-        setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 1);
-        return;
-      }
-
-      if (isScrollingUp()) {
-        setIsAtBottom(false);
-      }
-    };
-
-    textAreaRef.current?.focus();
-    handleScroll();
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [isAtBottom, lastScrollTop]);
+    if (isStickToBottom) scrollToBottom();
+  }, [messages, isStickToBottom]);
 
   return (
     <div style={{ backgroundColor: "black" }}>
@@ -133,7 +96,7 @@ const Chatroom: FC<ChatroomProps> = ({ username }) => {
           </div>
         );
       })}
-      <div ref={endOfMessagesRef} style={{ height: "120px" }}></div>
+      <div ref={bottomRef} style={{ height: "120px" }}></div>
       <div
         style={{
           position: "fixed",
