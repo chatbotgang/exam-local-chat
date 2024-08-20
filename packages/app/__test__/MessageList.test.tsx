@@ -1,11 +1,10 @@
-import React from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import { MessageType } from "../../app/enums/message";
-import MessageList from "../../app/components/MessageList";
-import { Message } from "../../app/models/message";
+import { MessageType } from "../enums/message";
+import MessageList from "../components/MessageList";
+import { Message } from "../models/message";
 
 const mockMessages: Message[] = [
   {

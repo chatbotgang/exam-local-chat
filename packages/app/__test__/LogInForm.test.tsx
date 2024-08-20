@@ -1,10 +1,9 @@
-import React from "react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import { readDataUriFromFile } from "../../app/lib/file";
-import LogInForm from "../../app/components/LogInForm";
+import { readDataUriFromFile } from "../lib/file";
+import LogInForm from "../components/LogInForm";
 
 vi.mock("../../app/lib/file.js", () => ({
   readDataUriFromFile: vi.fn().mockResolvedValue("data:image/png;base64,abc"),

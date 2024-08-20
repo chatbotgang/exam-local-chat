@@ -29,6 +29,12 @@ importers:
       "@exam/tsconfig":
         specifier: workspace:*
         version: link:packages/tsconfig
+      "@testing-library/jest-dom":
+        specifier: ^6.4.8
+        version: 6.4.8
+      "@testing-library/react":
+        specifier: ^16.0.0
+        version: 16.0.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       "@total-typescript/ts-reset":
         specifier: ^0.5.1
         version: 0.5.1
@@ -77,6 +83,9 @@ importers:
       husky:
         specifier: ^8.0.3
         version: 8.0.3
+      jsdom:
+        specifier: ^24.1.1
+        version: 24.1.1
       lint-staged:
         specifier: ^15.2.0
         version: 15.2.0
@@ -89,6 +98,9 @@ importers:
       vite:
         specifier: ^5.0.8
         version: 5.0.12(@types/node@20.11.5)
+      vitest:
+        specifier: ^2.0.5
+        version: 2.0.5(@types/node@20.11.5)(jsdom@24.1.1)
 
   packages/app:
     dependencies:
@@ -101,27 +113,15 @@ importers:
 
   packages/build:
     devDependencies:
-      "@testing-library/jest-dom":
-        specifier: ^6.4.8
-        version: 6.4.8
-      "@testing-library/react":
-        specifier: ^16.0.0
-        version: 16.0.0(@testing-library/dom@10.4.0)(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.40)
-      jsdom:
-        specifier: ^24.1.1
-        version: 24.1.1
       postcss:
         specifier: ^8.4.40
         version: 8.4.40
       tailwindcss:
         specifier: ^3.4.7
         version: 3.4.7
-      vitest:
-        specifier: ^2.0.5
-        version: 2.0.5(@types/node@20.11.5)(jsdom@24.1.1)
 
   packages/tsconfig: {}
 

@@ -1,10 +1,9 @@
-import React from "react";
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import Chatroom from "../../app/components/Chatroom";
-import { User } from "../../app/models/user";
+import Chatroom from "../components/Chatroom";
+import { User } from "../models/user";
 
 const mockUser: User = {
   username: "user",

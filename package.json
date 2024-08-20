@@ -6,7 +6,7 @@
     "dev": "pnpm run --filter @exam/build dev",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "prepare": "husky install",
-    "test": "pnpm run --filter @exam/build test"
+    "test": "pnpm run --filter @exam/app test"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -37,7 +37,11 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.2.4",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
+    "vitest": "^2.0.5",
+    "jsdom": "^24.1.1"
   },
   "packageManager": "pnpm@8.14.0",
   "engines": {

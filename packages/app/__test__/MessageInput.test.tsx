@@ -1,10 +1,9 @@
-import React from "react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import MessageInput from "../../app/components/MessageInput";
-import { MessageType } from "../../app/enums/message";
+import MessageInput from "../components/MessageInput";
+import { MessageType } from "../enums/message";
 
 vi.mock("../../app/lib/id", () => ({
   generateId: vi.fn(() => "test-id"),
