@@ -57,7 +57,7 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1(vite@5.0.12(@types/node@20.11.5))
       eslint:
-        specifier: ^8.55.0
+        specifier: ^8.56.0
         version: 8.56.0
       eslint-config-prettier:
         specifier: ^9.1.0
@@ -71,6 +71,9 @@ importers:
       eslint-plugin-react-refresh:
         specifier: ^0.4.5
         version: 0.4.5(eslint@8.56.0)
+      eslint-plugin-tailwindcss:
+        specifier: ^3.17.4
+        version: 3.17.4(tailwindcss@3.4.10)
       eslint-plugin-tsdoc:
         specifier: ^0.2.17
         version: 0.2.17
@@ -1668,6 +1671,15 @@ packages:
       }
     peerDependencies:
       eslint: ">=7"
+
+  eslint-plugin-tailwindcss@3.17.4:
+    resolution:
+      {
+        integrity: sha512-gJAEHmCq2XFfUP/+vwEfEJ9igrPeZFg+skeMtsxquSQdxba9XRk5bn0Bp9jxG1VV9/wwPKi1g3ZjItu6MIjhNg==,
+      }
+    engines: { node: ">=18.12.0" }
+    peerDependencies:
+      tailwindcss: ^3.4.0
 
   eslint-plugin-tsdoc@0.2.17:
     resolution:
@@ -4558,6 +4570,12 @@ snapshots:
   eslint-plugin-react-refresh@0.4.5(eslint@8.56.0):
     dependencies:
       eslint: 8.56.0
+
+  eslint-plugin-tailwindcss@3.17.4(tailwindcss@3.4.10):
+    dependencies:
+      fast-glob: 3.3.2
+      postcss: 8.4.41
+      tailwindcss: 3.4.10
 
   eslint-plugin-tsdoc@0.2.17:
     dependencies:
