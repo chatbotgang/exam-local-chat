@@ -46,6 +46,12 @@ function InputBox({
     }
   };
 
+  const handleLogout = () => {
+    if (window.confirm("確定要登出嗎？")) {
+      setUsername("");
+    }
+  };
+
   return (
     <div className="p-4">
       <div className="mb-2 text-sm text-gray-600">使用者: {username}</div>
@@ -57,7 +63,7 @@ function InputBox({
           placeholder="輸入訊息，按 Enter 發送，按 Shift+Enter 換行"
           className="h-24 w-full resize-y rounded border p-2"
         />
-        <div className="mt-2">
+        <div className="mt-2 flex justify-end">
           <button
             type="submit"
             className="rounded bg-blue-500 p-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
@@ -67,7 +73,7 @@ function InputBox({
           </button>
           <button
             type="button"
-            onClick={() => setUsername("")}
+            onClick={handleLogout}
             className="ml-2 rounded bg-red-500 p-2 text-white"
           >
             登出
