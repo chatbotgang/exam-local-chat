@@ -10,8 +10,10 @@ module.exports = {
   ],
   ignorePatterns: ["dist"],
   parser: "@typescript-eslint/parser",
-  plugins: ["eslint-plugin-tsdoc", "react-refresh"],
+  plugins: ["simple-import-sort", "eslint-plugin-tsdoc", "react-refresh"],
   rules: {
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },
