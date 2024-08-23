@@ -13,14 +13,19 @@ function App() {
   }, [username]);
 
   return (
-    <div className="container mx-auto flex h-screen max-w-2xl flex-col">
-      <Chatroom username={username}></Chatroom>
-
-      {username ? (
-        <InputBox username={username} setUsername={setUsername}></InputBox>
-      ) : (
-        <LoginBox setUsername={setUsername}></LoginBox>
-      )}
+    <div className="min-h-screen bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200">
+      <div className="container mx-auto flex h-screen max-w-2xl flex-col bg-white/50 shadow-lg">
+        {username ? (
+          <>
+            <Chatroom username={username} />
+            <InputBox username={username} setUsername={setUsername} />
+          </>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <LoginBox setUsername={setUsername} />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
