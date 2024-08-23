@@ -25,7 +25,7 @@ function InputBox({
         JSON.stringify([...messages, { username, text: inputText }]),
       );
 
-      // manually dispatch storage event to update current tab
+      // manually dispatch storage event for updating current tab
       window.dispatchEvent(new Event("storage"));
 
       setInputText("");

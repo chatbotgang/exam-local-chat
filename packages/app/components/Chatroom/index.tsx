@@ -18,6 +18,7 @@ function Chatroom({ username }: { username: string | null }) {
 
   const handleMessagesUpdate = (updatedMessages: message[]) => {
     setMessages(updatedMessages);
+
     if (isScrolledToBottom) {
       scrollToBottom();
     }
@@ -39,6 +40,7 @@ function Chatroom({ username }: { username: string | null }) {
       const { scrollTop, scrollHeight, clientHeight } =
         chatContainerRef.current;
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+
       setIsScrolledToBottom(isAtBottom);
     }
   };
