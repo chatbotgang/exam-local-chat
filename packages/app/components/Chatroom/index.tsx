@@ -17,14 +17,6 @@ function Chatroom({ username }: { username: string | null }) {
     }
   };
 
-  const handleMessagesUpdate = (updatedMessages: message[]) => {
-    setMessages(updatedMessages);
-
-    if (isScrolledToBottom) {
-      scrollToBottom();
-    }
-  };
-
   useEffect(() => {
     if (messages.length > 0) {
       const lastMessage = messages[messages.length - 1] as message;
@@ -51,14 +43,14 @@ function Chatroom({ username }: { username: string | null }) {
       localStorage.getItem("messages") || "[]",
     ) as message[];
 
-    handleMessagesUpdate(storedMessages);
+    setMessages(storedMessages);
 
     const handleStorageChange = () => {
       const updatedMessages = JSON.parse(
         localStorage.getItem("messages") || "[]",
       ) as message[];
 
-      handleMessagesUpdate(updatedMessages);
+      setMessages(updatedMessages);
     };
 
     window.addEventListener("storage", handleStorageChange);
