@@ -10,10 +10,12 @@ function InputBox({
 }) {
   const [inputText, setInputText] = useState("");
 
+  const isInputValid = () => inputText.trim().length > 0;
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (inputText.trim()) {
+    if (isInputValid()) {
       const messages = JSON.parse(
         localStorage.getItem("messages") || "[]",
       ) as message[];
@@ -22,9 +24,18 @@ function InputBox({
         "messages",
         JSON.stringify([...messages, { username, text: inputText }]),
       );
+
       // manually dispatch storage event to update current tab
       window.dispatchEvent(new Event("storage"));
+
       setInputText("");
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
     }
   };
 
@@ -32,26 +43,29 @@ function InputBox({
     <div className="p-4">
       <div className="mb-2 text-sm text-gray-600">使用者: {username}</div>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
+        <textarea
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          placeholder="輸入訊息"
-          className="rounded border p-2"
+          onKeyDown={handleKeyDown}
+          placeholder="輸入訊息，按 Enter 發送，按 Shift+Enter 換行"
+          className="h-24 w-full resize-y rounded border p-2"
         />
-        <button
-          type="submit"
-          className="ml-2 rounded bg-blue-500 p-2 text-white"
-        >
-          發送
-        </button>
-        <button
-          type="button"
-          onClick={() => setUsername("")}
-          className="ml-2 rounded bg-red-500 p-2 text-white"
-        >
-          登出
-        </button>
+        <div className="mt-2">
+          <button
+            type="submit"
+            className="rounded bg-blue-500 p-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!isInputValid()}
+          >
+            發送
+          </button>
+          <button
+            type="button"
+            onClick={() => setUsername("")}
+            className="ml-2 rounded bg-red-500 p-2 text-white"
+          >
+            登出
+          </button>
+        </div>
       </form>
     </div>
   );

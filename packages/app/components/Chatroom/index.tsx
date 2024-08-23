@@ -86,7 +86,7 @@ function Chatroom({ username }: { username: string | null }) {
               className={`max-w-xs rounded-lg p-3`}
               style={{ backgroundColor: generateRandomColor(message.username) }}
             >
-              <p>{message.text}</p>
+              <p className="whitespace-pre-wrap break-words">{message.text}</p>
             </div>
           </div>
         ))}
