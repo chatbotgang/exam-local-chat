@@ -83,7 +83,9 @@ function Chatroom({ username }: { username: string | null }) {
             }`}
           >
             <span className="mb-1 text-xs text-gray-500">
-              {message.username}
+              <span className="font-bold">{message.username}</span>
+              <span className="mx-1">•</span>
+              <span>{new Date(message.timestamp).toLocaleTimeString()}</span>
             </span>
             <div
               className={`max-w-xs rounded-lg p-3`}

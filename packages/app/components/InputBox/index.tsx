@@ -21,9 +21,15 @@ function InputBox({
         localStorage.getItem("messages") || "[]",
       ) as message[];
 
+      const newMessage = {
+        username,
+        text: inputText,
+        timestamp: Date.now(),
+      };
+
       localStorage.setItem(
         "messages",
-        JSON.stringify([...messages, { username, text: inputText }]),
+        JSON.stringify([...messages, newMessage]),
       );
 
       // manually dispatch storage event for updating current tab
