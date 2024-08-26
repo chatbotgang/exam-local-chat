@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node.js for use with actions
         uses: actions/setup-node@v4
         with:
-          node-version-file: ".nvmrc"
+          node-version-file: .nvmrc
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
@@ -39,10 +39,13 @@ jobs:
         run: pnpm install
 
       - name: Run ESLint
-        uses: tj-actions/eslint-changed-files@v19.0.1
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          config_path: ".eslintrc.cjs"
+        run: pnpm run lint:es
+
+      - name: Run CSpell
+        run: pnpm run lint:cspell
+
+      - name: Run Prettier
+        run: pnpm exec prettier --ignore-unknown --check .
 
       - name: Type Check
         run: pnpm exec tsc -p packages/app

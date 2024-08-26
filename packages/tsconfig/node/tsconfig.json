@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Exam Node",
-  "compilerOptions": {
-    "noEmit": true,
-  },
   "extends": ["@tsconfig/node20/tsconfig", "@tsconfig/strictest/tsconfig"],
+  "compilerOptions": {
+    "noEmit": true
+  }
 }
