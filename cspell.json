@@ -1,0 +1,20 @@
+{
+  "allowCompoundWords": true,
+  "enableFiletypes": ["*"],
+  "enableGlobDot": true,
+  "files": ["**/*"],
+  "ignorePaths": [
+    "**/__snapshots__/**",
+    "**/.env.*.local",
+    "**/.env.local",
+    "**/.gitignore",
+    "**/*.svg",
+    "/.git",
+    "/.prettierignore",
+    "/pnpm-lock.yaml"
+  ],
+  "includeRegExpList": ["[ -~]"],
+  "useGitignore": true,
+  "version": "0.2",
+  "words": ["antfu", "esbenp", "nvmrc", "pathe", "tsdoc"]
+}
