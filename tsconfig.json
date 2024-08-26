@@ -1,4 +1,5 @@
 {
-  "exclude": ["node_modules", "packages"],
   "extends": ["@exam/tsconfig/node/tsconfig"],
+  "include": ["*.config.js", "*.config.ts"],
+  "exclude": ["node_modules", "packages"]
 }
