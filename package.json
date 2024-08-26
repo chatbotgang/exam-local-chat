@@ -1,7 +1,7 @@
 {
   "name": "@exam/root",
   "type": "module",
-  "packageManager": "pnpm@8.15.9+sha256.daa27a0b541bc635323ff96c2ded995467ff9fe6d69ff67021558aa9ad9dcc36",
+  "packageManager": "pnpm@9.8.0+sha256.56a9e76b51796ca7f73b85e44cf83712862091f4d498c0ce4d5b7ecdc6ba18f7",
   "engines": {
     "node": ">=20",
     "pnpm": ">=8"
