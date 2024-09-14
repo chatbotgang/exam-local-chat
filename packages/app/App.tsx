@@ -1,37 +1,16 @@
 import { useState } from "react";
-import { useMessage } from "./src/hook/useMessage";
+import ChatRoom from "./src/pages/ChatRoom";
+import Login from "./src/pages/Login";
 
 function App() {
-  const [inputText, setInputText] = useState("");
-  const { messages, sendMessage } = useMessage();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const handleSendMessage = () => {
-    if (inputText.trim()) {
-      sendMessage("User", inputText);
-      setInputText("");
-    }
-  };
-
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
   return (
     <div>
-      <h1>Broadcast Messages</h1>
-      <div>
-        {messages.map((msg, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <p key={index}>
-            <strong>{msg.user}:</strong> {msg.text}
-          </p>
-        ))}
-      </div>
-      <input
-        type="text"
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        placeholder="Type a message"
-      />
-      <button type="button" onClick={handleSendMessage}>
-        Send Message
-      </button>
+      <ChatRoom />
     </div>
   );
 }
