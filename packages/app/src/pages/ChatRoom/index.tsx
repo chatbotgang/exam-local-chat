@@ -1,14 +1,16 @@
+import Cat from "@exam/app/src/components/Cat";
 import { useMessage, useScroll } from "@exam/app/src/hook";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 function ChatRoom({ userName }: { userName: string }) {
   const [inputText, setInputText] = useState("");
-  const chatContainerRef = React.useRef<HTMLDivElement>(null);
-  const { scrollToBottom, isScrolledAway } = useScroll(chatContainerRef);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const { scrollTop, scrollToBottom, isScrolledAway } =
+    useScroll(chatContainerRef);
   const { messages, sendUserMessage, sendJoinMessage, sendLeaveMessage } =
     useMessage();
-  const firstMountRef = React.useRef(true);
-  const hasMessagesReadyRef = React.useRef(false);
+  const firstMountRef = useRef(true);
+  const lastMessagesCountRef = useRef(0);
 
   useEffect(() => {
     // in React practice, we should use useRef to manage the first mount state
@@ -28,12 +30,12 @@ function ChatRoom({ userName }: { userName: string }) {
       window.removeEventListener("beforeunload", handleLeave);
     };
     // we should not rely on empty dependency to trigger only once, the strict mode will trigger the effect twice
-  }, [sendJoinMessage, sendLeaveMessage, userName, scrollToBottom]);
+  }, [sendJoinMessage, sendLeaveMessage, userName]);
 
   // scroll to bottom when messages are ready after the first mount
   useEffect(() => {
-    if (messages.length > 0 && !hasMessagesReadyRef.current) {
-      hasMessagesReadyRef.current = true;
+    if (messages.length > 0 && lastMessagesCountRef.current === 0) {
+      lastMessagesCountRef.current = messages.length;
       scrollToBottom();
     }
   }, [messages, scrollToBottom]);
@@ -48,27 +50,36 @@ function ChatRoom({ userName }: { userName: string }) {
 
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
+    if (lastMessagesCountRef.current === messages.length) {
+      return;
+    }
+    lastMessagesCountRef.current = messages.length;
+    // The scrollbar remains at the bottom unless manually scrolled away from the bottom
     if (!isScrolledAway) {
       scrollToBottom();
+      // scroll to bottom when the last message is mine
     } else if (lastMessage?.user === userName) {
       scrollToBottom();
     }
   }, [messages, scrollToBottom, userName, isScrolledAway]);
 
   return (
-    <div className="flex flex-col gap-4 h-full p-4 ">
+    <div className="flex flex-col gap-4 h-full p-4">
       <h1 className="h-12 text-2xl font-bold flex justify-center items-center bg-[#f4f5f7] rounded-2xl border">
         Cat Messages
       </h1>
+      <Cat progress={scrollTop + 30} className="w-1/2 top-0 left-1/2" />
+      <Cat progress={scrollTop * 0.1} className="w-full -top-80 mr-40" />
+      <Cat progress={scrollTop * 0.3} className="mt-20 -ml-40" />
       <div
         ref={chatContainerRef}
-        className="flex-1 flex flex-col gap-4 overflow-y-auto"
+        className="flex-1 flex flex-col gap-4 overflow-y-auto z-10"
       >
         {messages.map((msg, index) => (
-          // eslint-disable-next-line react/no-array-index-key
           <p
+            // eslint-disable-next-line react/no-array-index-key
             key={index}
-            className="text-xl py-4 px-4 bg-[#cbc2fa] rounded-2xl inline-block max-w-fit"
+            className={`text-xl py-4 px-4 bg-[#cbc2fa] rounded-2xl inline-block max-w-fit ${msg.user === userName ? "self-end" : ""}`}
           >
             <strong>{msg.user}:</strong>{" "}
             {msg.text.split("\n").map((line, i) => (

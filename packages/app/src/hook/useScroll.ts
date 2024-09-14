@@ -5,11 +5,15 @@ export function useScroll(ref: React.RefObject<HTMLDivElement>) {
   const scrollToBottom = useCallback(() => {
     const container = ref.current;
     if (container) {
-      container.scrollTop = container.scrollHeight;
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: "smooth",
+      });
     }
   }, [ref]);
 
   const [isScrolledAway, setIsScrolledAway] = useState(false);
+  const [scrollTop, setScrollTop] = useState(0);
 
   const detectScrollAway = useCallback(() => {
     const container = ref.current;
@@ -22,6 +26,8 @@ export function useScroll(ref: React.RefObject<HTMLDivElement>) {
       // If the difference is less than 1 pixel, consider it "at the bottom"
       const isAtBottom = scrollHeight - scrollTop - clientHeight < 1;
       setIsScrolledAway(!isAtBottom);
+
+      setScrollTop(scrollTop);
     }
   }, [ref]);
 
@@ -34,5 +40,5 @@ export function useScroll(ref: React.RefObject<HTMLDivElement>) {
     return () => {};
   }, [detectScrollAway, ref]);
 
-  return { scrollToBottom, isScrolledAway };
+  return { scrollToBottom, scrollTop, isScrolledAway };
 }

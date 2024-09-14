@@ -1,4 +1,4 @@
-import { useUser } from "./src/hook/useUser";
+import { useUser } from "./src/hook";
 import ChatRoom from "./src/pages/ChatRoom";
 import Login from "./src/pages/Login";
 
@@ -11,7 +11,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="h-screen">
       <ChatRoom userName={user} />
     </div>
   );
