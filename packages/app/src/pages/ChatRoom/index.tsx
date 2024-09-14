@@ -1,16 +1,16 @@
 import { useMessage } from "@exam/app/src/hook/useMessage";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
-function ChatRoom() {
+function ChatRoom({ userName }: { userName: string }) {
   const [inputText, setInputText] = useState("");
   const { messages, sendMessage } = useMessage();
 
-  const handleSendMessage = () => {
+  const handleSendMessage = useCallback(() => {
     if (inputText.trim()) {
-      sendMessage("User", inputText);
+      sendMessage(userName, inputText);
       setInputText("");
     }
-  };
+  }, [inputText, sendMessage, setInputText, userName]);
 
   return (
     <div>

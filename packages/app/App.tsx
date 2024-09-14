@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useUser } from "./src/hook/useUser";
 import ChatRoom from "./src/pages/ChatRoom";
 import Login from "./src/pages/Login";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { user, setUserName } = useUser();
+  const isLoggedIn = user !== null;
 
   if (!isLoggedIn) {
-    return <Login onLogin={() => setIsLoggedIn(true)} />;
+    return <Login onLogin={(username) => setUserName(username)} />;
   }
+
   return (
     <div>
-      <ChatRoom />
+      <ChatRoom userName={user} />
     </div>
   );
 }
