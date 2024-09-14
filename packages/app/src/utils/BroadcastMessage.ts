@@ -9,21 +9,18 @@ export const MessageSchema = z.object({
 export type Message = z.infer<typeof MessageSchema>;
 
 export function createSystemMessage(text: string): Message {
-  return {
-    user: "system",
-    text,
-    time: Date.now(),
-  };
+  return createUserMessage("system", text);
 }
 
 export function createUserMessage(user: string, text: string): Message {
-  return {
+  return MessageSchema.parse({
     user,
     text,
     time: Date.now(),
-  };
+  });
 }
 
+// manage the lifecycle of the broadcast channel
 export class BroadcastMessage {
   private channel: BroadcastChannel;
   private currentListener: ((event: MessageEvent) => void) | null = null;
@@ -32,13 +29,7 @@ export class BroadcastMessage {
     this.channel = new BroadcastChannel(channelName);
   }
 
-  sendMessage(user: string, text: string) {
-    const message = MessageSchema.parse({
-      user,
-      text,
-      time: Date.now(),
-    });
-
+  sendMessage(message: Message) {
     this.channel.postMessage(JSON.stringify(message));
   }
 
