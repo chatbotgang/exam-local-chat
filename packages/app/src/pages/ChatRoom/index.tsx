@@ -1,5 +1,6 @@
 import Cat from "@exam/app/src/components/Cat";
 import { useMessage, useScroll } from "@exam/app/src/hook";
+import { getCatMessage } from "@exam/app/src/utils/catMessages";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 function ChatRoom({ userName }: { userName: string }) {
@@ -48,12 +49,16 @@ function ChatRoom({ userName }: { userName: string }) {
     }
   }, [inputText, sendUserMessage, setInputText, userName]);
 
+  const handleSendCatMessage = useCallback(() => {
+    sendUserMessage(userName, getCatMessage());
+  }, [sendUserMessage, userName]);
+
   useEffect(() => {
-    const lastMessage = messages[messages.length - 1];
     if (lastMessagesCountRef.current === messages.length) {
       return;
     }
     lastMessagesCountRef.current = messages.length;
+    const lastMessage = messages[messages.length - 1];
     // The scrollbar remains at the bottom unless manually scrolled away from the bottom
     if (!isScrolledAway) {
       scrollToBottom();
@@ -64,13 +69,18 @@ function ChatRoom({ userName }: { userName: string }) {
   }, [messages, scrollToBottom, userName, isScrolledAway]);
 
   return (
-    <div className="flex flex-col gap-4 h-full p-4">
+    <div className="flex flex-col gap-4 h-full p-4 z-10 relative">
       <h1 className="h-12 text-2xl font-bold flex justify-center items-center bg-[#f4f5f7] rounded-2xl border">
         Cat Messages
       </h1>
-      <Cat progress={scrollTop + 30} className="w-1/2 top-0 left-1/2" />
-      <Cat progress={scrollTop * 0.1} className="w-full -top-80 mr-40" />
-      <Cat progress={scrollTop * 0.3} className="mt-20 -ml-40" />
+      <div className="absolute top-20 left-0 w-full h-3/4 z-0 overflow-hidden">
+        <Cat progress={scrollTop + 30} className="h-[500px] top-0 left-1/2" />
+        <Cat progress={scrollTop * 0.1} className="h-[1000px] -top-80 mr-40" />
+        <Cat
+          progress={scrollTop * 0.3}
+          className="h-[1400px] -top-[300px] -ml-40"
+        />
+      </div>
       <div
         ref={chatContainerRef}
         className="flex-1 flex flex-col gap-4 overflow-y-auto z-10"
@@ -112,6 +122,13 @@ function ChatRoom({ userName }: { userName: string }) {
           onClick={handleSendMessage}
         >
           {`Enter ₍^⸝⸝> ·̫ <⸝⸝ ^₎`}
+        </button>
+        <button
+          className="h-16 p-4 bg-[#110c2b] text-white rounded-md"
+          type="button"
+          onClick={handleSendCatMessage}
+        >
+          {`Meow /ᐠ. ｡.ᐟ\\ᵐᵉᵒʷˎˊ˗`}
         </button>
       </div>
     </div>
