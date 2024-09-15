@@ -18,16 +18,16 @@ export function useScroll(ref: React.RefObject<HTMLDivElement>) {
   const detectScrollAway = useCallback(() => {
     const container = ref.current;
     if (container) {
-      const { scrollTop, scrollHeight, clientHeight } = container;
+      const { scrollTop: newScrollTop, scrollHeight, clientHeight } = container;
       // Check if the user has scrolled to the bottom of the chat
       // scrollHeight: total height of the scrollable content
       // scrollTop: distance from the top of the viewport to the top of the content
       // clientHeight: height of the visible area
       // If the difference is less than 1 pixel, consider it "at the bottom"
-      const isAtBottom = scrollHeight - scrollTop - clientHeight < 1;
+      const isAtBottom = scrollHeight - newScrollTop - clientHeight < 60; // 60 is a message height
       setIsScrolledAway(!isAtBottom);
 
-      setScrollTop(scrollTop);
+      setScrollTop(newScrollTop);
     }
   }, [ref]);
 
