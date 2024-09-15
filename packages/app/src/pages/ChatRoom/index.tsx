@@ -86,20 +86,28 @@ function ChatRoom({ userName }: { userName: string }) {
         className="flex-1 flex flex-col gap-4 overflow-y-auto z-10"
       >
         {messages.map((msg, index) => (
-          <p
+          <div
             // eslint-disable-next-line react/no-array-index-key
             key={index}
-            className={`text-xl py-4 px-4 bg-[#cbc2fa] rounded-2xl inline-block max-w-fit ${msg.user === userName ? "self-end" : ""}`}
+            className={`flex flex-col items-start gap-4 ${msg.user === userName ? "self-end" : ""}`}
           >
-            <strong>{msg.user}:</strong>{" "}
-            {msg.text.split("\n").map((line, i) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <React.Fragment key={i}>
-                {line}
-                {i < msg.text.split("\n").length - 1 && <br />}
-              </React.Fragment>
-            ))}
-          </p>
+            <p className={`text-xl font-bold `}>
+              {`${msg.user}: ${new Date(msg.time).toLocaleTimeString()}`}{" "}
+            </p>
+            <p
+              className={`text-xl py-4 px-4 rounded-2xl inline-block max-w-fit opacity-90 ${
+                msg.user === userName ? "self-end bg-[#cbc2fa]" : "bg-[#f4f5f7]"
+              }`}
+            >
+              {msg.text.split("\n").map((line, i) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <React.Fragment key={i}>
+                  {line}
+                  {i < msg.text.split("\n").length - 1 && <br />}
+                </React.Fragment>
+              ))}
+            </p>
+          </div>
         ))}
       </div>
       <div className="h-36 flex gap-2 p-4 items-center bg-[#f7f5ff] rounded-2xl border">
