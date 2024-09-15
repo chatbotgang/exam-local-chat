@@ -1,5 +1,6 @@
 import Cat from "@exam/app/src/components/Cat";
-import { useMessage, useScroll } from "@exam/app/src/hook";
+import { EventMessage, useMessage, useScroll } from "@exam/app/src/hook";
+import type { Message } from "@exam/app/src/utils/BroadcastMessage";
 import { getCatMessage } from "@exam/app/src/utils/catMessages";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
@@ -8,10 +9,31 @@ function ChatRoom({ userName }: { userName: string }) {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { scrollTop, scrollToBottom, isScrolledAway } =
     useScroll(chatContainerRef);
+
+  const handleScrollToBottomWithNewMessage = useCallback(
+    (messages: Message[]) => {
+      const lastMessage = messages[messages.length - 1];
+      // The scrollbar remains at the bottom unless manually scrolled away from the bottom
+      if (!isScrolledAway) {
+        scrollToBottom();
+        // scroll to bottom when the last message is mine
+      } else if (lastMessage?.user === userName) {
+        scrollToBottom();
+      }
+    },
+    [scrollToBottom, isScrolledAway, userName],
+  );
+
   const { messages, sendUserMessage, sendJoinMessage, sendLeaveMessage } =
-    useMessage();
+    useMessage({
+      messageEvents: {
+        // scroll to bottom when messages are ready after the first mount
+        [EventMessage.InitReady]: scrollToBottom,
+        // scroll to bottom when new message is added
+        [EventMessage.NewMessage]: handleScrollToBottomWithNewMessage,
+      },
+    });
   const firstMountRef = useRef(true);
-  const lastMessagesCountRef = useRef(0);
 
   useEffect(() => {
     // in React practice, we should use useRef to manage the first mount state
@@ -33,14 +55,6 @@ function ChatRoom({ userName }: { userName: string }) {
     // we should not rely on empty dependency to trigger only once, the strict mode will trigger the effect twice
   }, [sendJoinMessage, sendLeaveMessage, userName]);
 
-  // scroll to bottom when messages are ready after the first mount
-  useEffect(() => {
-    if (messages.length > 0 && lastMessagesCountRef.current === 0) {
-      lastMessagesCountRef.current = messages.length;
-      scrollToBottom();
-    }
-  }, [messages, scrollToBottom]);
-
   const handleSendMessage = useCallback(() => {
     // Messages containing only spaces or line breaks are not allowed to be sent.
     if (inputText.trim()) {
@@ -52,21 +66,6 @@ function ChatRoom({ userName }: { userName: string }) {
   const handleSendCatMessage = useCallback(() => {
     sendUserMessage(userName, getCatMessage());
   }, [sendUserMessage, userName]);
-
-  useEffect(() => {
-    if (lastMessagesCountRef.current === messages.length) {
-      return;
-    }
-    lastMessagesCountRef.current = messages.length;
-    const lastMessage = messages[messages.length - 1];
-    // The scrollbar remains at the bottom unless manually scrolled away from the bottom
-    if (!isScrolledAway) {
-      scrollToBottom();
-      // scroll to bottom when the last message is mine
-    } else if (lastMessage?.user === userName) {
-      scrollToBottom();
-    }
-  }, [messages, scrollToBottom, userName, isScrolledAway]);
 
   return (
     <div className="flex flex-col gap-4 h-full p-4 z-10 relative">

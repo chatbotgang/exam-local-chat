@@ -27,9 +27,46 @@ const getMessagesFromLocalStorage = (): Message[] => {
   return [];
 };
 
-export function useMessage() {
+export enum EventMessage {
+  InitReady = "initReady",
+  NewMessage = "newMessage",
+}
+
+export const useMessageEvent = (
+  eventType: EventMessage,
+  callback: (detail: Message[]) => void,
+) => {
+  useEffect(() => {
+    const handleEvent = (event: CustomEvent) => {
+      callback(event.detail);
+    };
+    window.addEventListener(eventType, handleEvent as EventListener);
+    return () => {
+      window.removeEventListener(eventType, handleEvent as EventListener);
+    };
+  }, [eventType, callback]);
+};
+
+interface MessageInterface {
+  messageEvents: {
+    [EventMessage.InitReady]: (messages: Message[]) => void;
+    [EventMessage.NewMessage]: (messages: Message[]) => void;
+  };
+}
+
+export function useMessage(messageInterface: MessageInterface) {
   const [messages, setMessages] = useState<Message[]>([]);
   const broadcastChannelRef = useRef<BroadcastMessage | null>(null);
+  const lastMessagesCountRef = useRef(0);
+
+  useMessageEvent(
+    EventMessage.InitReady,
+    messageInterface.messageEvents[EventMessage.InitReady],
+  );
+  useMessageEvent(
+    EventMessage.NewMessage,
+    messageInterface.messageEvents[EventMessage.NewMessage],
+  );
 
   useEffect(() => {
     broadcastChannelRef.current = new BroadcastMessage(BROADCAST_KEY);
@@ -45,6 +82,27 @@ export function useMessage() {
       broadcastChannelRef.current?.close();
     };
   }, []);
+
+  // dispatch message events
+  useEffect(() => {
+    if (lastMessagesCountRef.current === messages.length) {
+      return;
+    }
+    if (messages.length > 0 && lastMessagesCountRef.current === 0) {
+      // Dispatch InitReady event when initial messages are loaded
+      const event = new CustomEvent(EventMessage.InitReady, {
+        detail: messages,
+      });
+      window.dispatchEvent(event);
+    } else {
+      // Dispatch NewMessage event when new messages are added
+      const event = new CustomEvent(EventMessage.NewMessage, {
+        detail: messages,
+      });
+      window.dispatchEvent(event);
+    }
+    lastMessagesCountRef.current = messages.length;
+  }, [messages]);
 
   // single source of the messages update
   const sendMessage = useCallback((message: Message) => {
