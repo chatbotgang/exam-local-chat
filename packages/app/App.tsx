@@ -4,15 +4,20 @@ import Login from "./pages/Login";
 import { StorageKey, StorageType } from "./types";
 
 function App() {
-  const [storedValue, setStoredName] = useStorage(
+  const [storedName, setStoredName] = useStorage(
     StorageKey.Username,
+    "",
     StorageType.Session,
   );
 
   return (
     <>
       <h1>Local Chat App</h1>
-      {storedValue ? <ChatRoom /> : <Login setStoredName={setStoredName} />}
+      {storedName ? (
+        <ChatRoom storedName={storedName} />
+      ) : (
+        <Login setStoredName={setStoredName} />
+      )}
     </>
   );
 }
