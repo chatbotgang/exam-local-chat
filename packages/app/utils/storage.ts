@@ -1,20 +1,15 @@
-export enum StorageType {
-  Local = "local",
-  Session = "session",
-}
+import { StorageType } from "../types";
 
 const getStorage = (type: StorageType): Storage => {
   return type === StorageType.Local ? localStorage : sessionStorage;
 };
 
-export const getStorageKey = (key: string) => `local-chat-${key}`;
-
 export const getFromStorage = (
   key: string,
   type: StorageType = StorageType.Local,
-) => {
+): any => {
   const storage = getStorage(type);
-  const item = storage.getItem(getStorageKey(key));
+  const item = storage.getItem(key);
   return item ? JSON.parse(item) : null;
 };
 
@@ -24,5 +19,5 @@ export const setToStorage = (
   type: StorageType = StorageType.Local,
 ) => {
   const storage = getStorage(type);
-  storage.setItem(getStorageKey(key), JSON.stringify(value));
+  storage.setItem(key, JSON.stringify(value));
 };

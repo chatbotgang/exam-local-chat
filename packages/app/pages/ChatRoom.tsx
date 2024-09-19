@@ -1,3 +1,7 @@
-const ChatRoom = () => {};
+import { memo } from "react";
 
-export default ChatRoom;
+const ChatRoom = () => {
+  return <>hello</>;
+};
+
+export default memo(ChatRoom);

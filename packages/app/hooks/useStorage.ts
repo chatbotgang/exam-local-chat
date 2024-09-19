@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { StorageType, getFromStorage, setToStorage } from "../utils/storage";
+import type { StorageKey } from "../types";
+import { StorageType } from "../types";
+import { getFromStorage, setToStorage } from "../utils/storage";
 
-function useStorage<T>(
-  key: string,
-  initialValue: T,
+function useStorage(
+  key: StorageKey,
   storageType: StorageType = StorageType.Local,
 ) {
   const [storedValue, setStoredValue] = useState(() => {
-    return getFromStorage(key, storageType) ?? initialValue;
+    return getFromStorage(key, storageType) ?? "";
   });
 
   useEffect(() => {
