@@ -1,16 +1,14 @@
 import { useEffect, useRef } from "react";
+import MessageItem from "../components/MessageItem";
 import type { Message } from "../types";
 
 interface MessageListProps {
+  currentUser: string;
   messages: Message[];
 }
 
-const MessageList = ({ messages }: MessageListProps) => {
+const MessageList = ({ currentUser, messages }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  //   const scrollToBottom = () => {
-  //     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  //   };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ block: "end" });
@@ -18,16 +16,17 @@ const MessageList = ({ messages }: MessageListProps) => {
 
   return (
     <div
-      style={{ height: "400px", overflowY: "auto", backgroundColor: "#ddd" }}
+      style={{
+        height: "calc(100vh - 40px)",
+        overflowY: "auto",
+      }}
     >
-      {messages.map((message) => (
-        <div
+      {messages.map((message: Message) => (
+        <MessageItem
           key={message.id}
-          style={{ marginBottom: "10px", whiteSpace: "pre-wrap" }}
-        >
-          <strong>{message.userName}: </strong>
-          {message.content}
-        </div>
+          message={message}
+          isCurrentUser={currentUser === message.userName}
+        />
       ))}
 
       <div ref={messagesEndRef} />

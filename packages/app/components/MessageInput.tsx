@@ -1,3 +1,4 @@
+import { Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface MessageInputProps {
@@ -9,7 +10,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
 
   const handleKeyDown: React.ComponentProps<"textarea">["onKeyDown"] = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      //   e.preventDefault();
+      e.preventDefault();
       if (message.trim()) {
         onSendMessage(message);
         setMessage("");
@@ -23,12 +24,16 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
 
   return (
     <div style={{ position: "fixed", bottom: 0 }}>
-      <textarea
+      <Textarea
+        width="100vw"
         value={message}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        resize="none"
         placeholder="Type a message..."
-        // rows={3}
+        rows={1}
+        maxLength={500}
+        autoFocus
       />
     </div>
   );
