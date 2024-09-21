@@ -1,4 +1,4 @@
-export const formatDate = (date: number) => {
+export const formatDate = (date: number = 0) => {
   const d = new Date(date);
 
   if (Number.isNaN(d.getTime())) {
