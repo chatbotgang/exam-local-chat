@@ -1,13 +1,18 @@
 import type { FC } from "react";
+import { useState } from "react";
 import ChatRoom from "./components/ChatRoom";
 import Entrance from "./components/Entrance";
+import { getStoredLocalUsername } from "./utils/window";
 
 const App: FC = () => {
-  // TODO: implement logic for handling local user joining and additional features.
-  const isJoined = true;
+  const [localUsername, setLocalUsername] = useState(() =>
+    getStoredLocalUsername(),
+  );
+
+  const isJoined = Boolean(localUsername);
 
   if (!isJoined) {
-    return <Entrance />;
+    return <Entrance setLocalUsername={setLocalUsername} />;
   }
   return <ChatRoom />;
 };
