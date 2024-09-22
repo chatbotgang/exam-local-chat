@@ -2,6 +2,7 @@ import { nanoid } from "nanoid";
 import type { FC, KeyboardEvent } from "react";
 import { useEffect, useState } from "react";
 import { type ChatMessage, ChatMessageType } from "../../types/message";
+import channel, { broadCastChatMessage } from "../../utils/broadcastChannel";
 import { getStoredChatMessages, storeChatMessages } from "../../utils/window";
 import Message from "./Message";
 
@@ -26,6 +27,7 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
       };
       setChatMessages((prev) => [...prev, newMessage]);
       setInputMessage("");
+      broadCastChatMessage(newMessage);
     }
   };
 
@@ -34,6 +36,11 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
   useEffect(() => {
     storeChatMessages(chatMessages);
   }, [chatMessages]);
+
+  useEffect(() => {
+    channel.onmessage = (event) =>
+      setChatMessages((prev) => [...prev, event.data]);
+  }, []);
 
   return (
     <div>

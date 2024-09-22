@@ -1,5 +1,8 @@
+import { nanoid } from "nanoid";
 import type { Dispatch, FC, SetStateAction } from "react";
 import { useState } from "react";
+import { ChatMessageType } from "../types/message";
+import { broadCastChatMessage } from "../utils/broadcastChannel";
 import { storeLocalUsername } from "../utils/window";
 
 interface EntranceProps {
@@ -14,6 +17,12 @@ const Entrance: FC<EntranceProps> = ({ setLocalUsername }) => {
     if (username.trim()) {
       storeLocalUsername(username);
       setLocalUsername(username);
+      broadCastChatMessage({
+        id: nanoid(),
+        timestamp: Date.now(),
+        type: ChatMessageType.Joined,
+        username,
+      });
     }
   };
 
