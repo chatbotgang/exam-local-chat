@@ -1,3 +1,4 @@
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { nanoid } from "nanoid";
 import type { Dispatch, FC, SetStateAction } from "react";
 import { useState } from "react";
@@ -27,18 +28,48 @@ const Entrance: FC<EntranceProps> = ({ setLocalUsername }) => {
   };
 
   return (
-    <div>
-      <h2>輸入你的名稱，加入聊天室，一起交流！</h2>
-      <form onSubmit={handleSubmit}>
-        <input
+    <Container
+      maxWidth="sm"
+      sx={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        p: 2,
+        gap: 2,
+      }}
+    >
+      <Typography variant="h4" align="center">
+        歡迎加入聊天室，一起交流！
+      </Typography>
+      <Box
+        component="form"
+        autoComplete="off"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        sx={{
+          flexDirection: {
+            xs: "column",
+            sm: "row",
+          },
+          gap: 2,
+        }}
+        onSubmit={handleSubmit}
+      >
+        <TextField
+          required
           type="text"
+          placeholder="輸入你的使用者名稱"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="輸入你的使用者名稱"
         />
-        <button type="submit">進入聊天室</button>
-      </form>
-    </div>
+        <Button type="submit" variant="contained">
+          進入聊天室
+        </Button>
+      </Box>
+    </Container>
   );
 };
 
