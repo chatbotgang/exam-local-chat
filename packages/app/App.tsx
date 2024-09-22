@@ -14,7 +14,7 @@ const App: FC = () => {
   if (!isJoined) {
     return <Entrance setLocalUsername={setLocalUsername} />;
   }
-  return <ChatRoom />;
+  return <ChatRoom localUsername={localUsername} />;
 };
 
 export default App;
