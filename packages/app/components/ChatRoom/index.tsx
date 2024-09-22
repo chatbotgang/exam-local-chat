@@ -1,3 +1,4 @@
+import { Box, Container, TextField, Typography } from "@mui/material";
 import { nanoid } from "nanoid";
 import type { FC, KeyboardEvent } from "react";
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
 
   const handleSendMessage = (e: KeyboardEvent) => {
     if (e.key === "Enter" && inputMessage.trim() && !e.shiftKey) {
+      e.preventDefault();
       const newMessage: ChatMessage = {
         id: nanoid(),
         timestamp: Date.now(),
@@ -59,20 +61,58 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
   }, [localUsername]);
 
   return (
-    <div>
-      <h2>聊天室</h2>
-      <div style={{ whiteSpace: "pre" }}>
+    <Container
+      maxWidth="sm"
+      sx={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        p: 2,
+        gap: 2,
+      }}
+    >
+      <Typography variant="h4" align="center">
+        輸入訊息，隨性交流
+      </Typography>
+      <Box
+        sx={{
+          flex: 1,
+          overflowY: "auto",
+          padding: "8px",
+          border: "1px solid",
+          borderColor: "primary.contrastText",
+          borderRadius: 2,
+          whiteSpace: "pre",
+        }}
+      >
         {chatMessages.map((chatMessage) => (
-          <Message key={chatMessage.id} chatMessage={chatMessage} />
+          <Message
+            key={chatMessage.id}
+            localUsername={localUsername}
+            chatMessage={chatMessage}
+          />
         ))}
-      </div>
-      <textarea
-        value={inputMessage}
-        onChange={(e) => setInputMessage(e.target.value)}
-        onKeyDown={handleSendMessage}
-        placeholder="輸入訊息，按 Enter 發送"
-      />
-    </div>
+      </Box>
+      <Box
+        component="form"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <TextField
+          multiline
+          placeholder="輸入訊息，按 Enter 發送"
+          type="text"
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+          onKeyDown={handleSendMessage}
+          fullWidth
+        />
+      </Box>
+    </Container>
   );
 };
 
