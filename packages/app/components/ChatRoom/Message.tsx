@@ -6,10 +6,10 @@ interface MessageProps {
 }
 
 const Message: FC<MessageProps> = ({ chatMessage }) => {
-  return chatMessage.type === ChatMessageType.Joined ? (
-    <div>{`joined: ${chatMessage.username}`}</div>
-  ) : (
+  return chatMessage.type === ChatMessageType.Text ? (
     <div>{`${chatMessage.username}: ${chatMessage.message}`}</div>
+  ) : (
+    <div>{`${chatMessage.type}: ${chatMessage.username}`}</div>
   );
 };
 

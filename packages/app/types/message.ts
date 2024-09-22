@@ -1,6 +1,7 @@
 export enum ChatMessageType {
   Joined = "joined",
   Text = "text",
+  Left = "left",
 }
 
 export interface ChatMessage {

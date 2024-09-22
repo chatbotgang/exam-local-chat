@@ -42,6 +42,22 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
       setChatMessages((prev) => [...prev, event.data]);
   }, []);
 
+  useEffect(() => {
+    const handleLeave = () => {
+      broadCastChatMessage({
+        id: nanoid(),
+        type: ChatMessageType.Left,
+        timestamp: Date.now(),
+        username: localUsername,
+      });
+    };
+
+    window.addEventListener("beforeunload", handleLeave);
+    return () => {
+      window.removeEventListener("beforeunload", handleLeave);
+    };
+  }, [localUsername]);
+
   return (
     <div>
       <h2>聊天室</h2>
