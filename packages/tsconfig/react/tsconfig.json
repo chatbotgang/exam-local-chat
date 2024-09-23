@@ -1,5 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Exam React",
-  "extends": ["@tsconfig/vite-react/tsconfig", "@tsconfig/strictest/tsconfig"]
+  "extends": ["@tsconfig/vite-react/tsconfig", "@tsconfig/strictest/tsconfig"],
+  "compilerOptions": {
+    "types": ["@testing-library/jest-dom", "vitest/globals"]
+  }
 }
