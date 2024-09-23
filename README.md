@@ -13,7 +13,7 @@ Please refer to the video: [📽️ Video](https://drive.google.com/file/d/1JnsT
 - Users can input their names and enter the chat room.
 - Users can input another username when opening a brand new browser tab.
 - If a username has been entered in a browser tab, the name should be kept after refreshing the tab.
-- Names can be duplicated across tabs and are treated as the same user.
+- Names can be duplicated across tabs and are treated as the same user. Names can be duplicated across tabs and are treated as the same user. A join message won't be duplicated if the user is already logged in, and the leave message will only be appended when all of the user's tabs are closed.
 - The scrollbar remains at the bottom unless manually scrolled away from the bottom (consider all possible scenarios).
 - When a message is sent by me (current tab's user), the scrollbar automatically scrolls to the bottom.
 - Pressing <kbd>Enter</kbd> sends the message, and <kbd>Shift</kbd> + <kbd>Enter</kbd> sends line breaks.
