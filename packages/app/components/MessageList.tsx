@@ -5,7 +5,7 @@ import type { Message, SystemText } from "../types";
 
 interface MessageListProps {
   currentUser: string;
-  messages: Message[];
+  messages: Array<Message | SystemText>;
 }
 
 const MessageList = ({ currentUser, messages }: MessageListProps) => {
@@ -17,12 +17,13 @@ const MessageList = ({ currentUser, messages }: MessageListProps) => {
 
   return (
     <div
+      data-testid="message-list"
       style={{
         height: "calc(100vh - 40px)",
         overflowY: "auto",
       }}
     >
-      {messages.map((message: Message | SystemText) =>
+      {messages.map((message) =>
         message.type === "message" ? (
           <MessageItem
             key={message.id}
