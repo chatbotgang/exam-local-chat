@@ -1,10 +1,11 @@
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { nanoid } from "nanoid";
 import type { Dispatch, FC, SetStateAction } from "react";
 import { useState } from "react";
 import { ChatMessageType } from "../types/message";
 import { broadCastChatMessage } from "../utils/broadcastChannel";
 import { storeLocalUsername } from "../utils/window";
+import Layout from "./Layout";
 
 interface EntranceProps {
   setLocalUsername: Dispatch<SetStateAction<string>>;
@@ -28,21 +29,7 @@ const Entrance: FC<EntranceProps> = ({ setLocalUsername }) => {
   };
 
   return (
-    <Container
-      maxWidth="sm"
-      sx={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        p: 2,
-        gap: 2,
-      }}
-    >
-      <Typography variant="h4" align="center">
-        歡迎加入聊天室，一起交流！
-      </Typography>
+    <Layout title="歡迎加入聊天室，一起交流！">
       <Box
         component="form"
         autoComplete="off"
@@ -69,7 +56,7 @@ const Entrance: FC<EntranceProps> = ({ setLocalUsername }) => {
           進入聊天室
         </Button>
       </Box>
-    </Container>
+    </Layout>
   );
 };
 

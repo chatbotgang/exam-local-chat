@@ -1,10 +1,11 @@
-import { Box, Container, TextField, Typography } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { nanoid } from "nanoid";
 import type { FC, KeyboardEvent } from "react";
 import { useEffect, useState } from "react";
 import { type ChatMessage, ChatMessageType } from "../../types/message";
 import channel, { broadCastChatMessage } from "../../utils/broadcastChannel";
 import { getStoredChatMessages, storeChatMessages } from "../../utils/window";
+import Layout from "../Layout";
 import Message from "./Message";
 
 interface ChatRoomProps {
@@ -61,21 +62,7 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
   }, [localUsername]);
 
   return (
-    <Container
-      maxWidth="sm"
-      sx={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        p: 2,
-        gap: 2,
-      }}
-    >
-      <Typography variant="h4" align="center">
-        輸入訊息，隨性交流
-      </Typography>
+    <Layout title="輸入訊息，隨性交流">
       <Box
         sx={{
           flex: 1,
@@ -112,7 +99,7 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
           fullWidth
         />
       </Box>
-    </Container>
+    </Layout>
   );
 };
 
