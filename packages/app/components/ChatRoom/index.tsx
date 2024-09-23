@@ -65,6 +65,7 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
     <Layout title="輸入訊息，隨性交流">
       <Box
         sx={{
+          width: "100%",
           flex: 1,
           overflowY: "auto",
           padding: "8px",
@@ -85,6 +86,7 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
       <Box
         component="form"
         sx={{
+          width: "100%",
           display: "flex",
           alignItems: "center",
         }}
