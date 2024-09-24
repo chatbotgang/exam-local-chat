@@ -26,7 +26,6 @@ const Login = ({ setStoredName }: LoginProps) => {
   };
 
   return (
-    // <Flex align="center" justify="center" minHeight="100vh">
     <Center minHeight="100vh" color="white">
       <FormControl isRequired color="white" width={300}>
         <FormLabel>Enter your name</FormLabel>

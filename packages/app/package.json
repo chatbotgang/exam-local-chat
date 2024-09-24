@@ -1,4 +1,7 @@
 {
   "name": "@exam/app",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "test": "vitest --watch"
+  }
 }
