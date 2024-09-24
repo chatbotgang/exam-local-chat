@@ -2,6 +2,7 @@ import { Box, TextField } from "@mui/material";
 import { nanoid } from "nanoid";
 import type { FC, KeyboardEvent } from "react";
 import { useEffect, useState } from "react";
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { type ChatMessage, ChatMessageType } from "../../types/message";
 import channel, { broadCastChatMessage } from "../../utils/broadcastChannel";
 import { getStoredChatMessages, storeChatMessages } from "../../utils/window";
@@ -18,6 +19,20 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
     getStoredChatMessages(),
   );
 
+  const [shouldAutoScrollToBottom, setShouldAutoScrollToBottom] =
+    useState(true);
+  const { rootRef: chatBoxRef, targetRef: messagesEndRef } =
+    useIntersectionObserver<HTMLDivElement>({
+      onIntersect: (isIntersecting) =>
+        setShouldAutoScrollToBottom(isIntersecting),
+    });
+
+  useEffect(() => {
+    if (shouldAutoScrollToBottom && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMessages, shouldAutoScrollToBottom, messagesEndRef]);
+
   const handleSendMessage = (e: KeyboardEvent) => {
     if (e.key === "Enter" && inputMessage.trim() && !e.shiftKey) {
       e.preventDefault();
@@ -31,6 +46,7 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
       setChatMessages((prev) => [...prev, newMessage]);
       setInputMessage("");
       broadCastChatMessage(newMessage);
+      setShouldAutoScrollToBottom(true);
     }
   };
 
@@ -64,6 +80,7 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
   return (
     <Layout title="輸入訊息，隨性交流">
       <Box
+        ref={chatBoxRef}
         sx={{
           width: "100%",
           flex: 1,
@@ -82,6 +99,7 @@ const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
             chatMessage={chatMessage}
           />
         ))}
+        <div ref={messagesEndRef} />
       </Box>
       <Box
         component="form"
