@@ -5,7 +5,7 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface LoginProps {
   setStoredName: React.Dispatch<any>;
@@ -13,12 +13,17 @@ interface LoginProps {
 
 const Login = ({ setStoredName }: LoginProps) => {
   const [name, setName] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const handleKeyDown: React.ComponentProps<"input">["onKeyDown"] = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      setStoredName(name);
-    }
+    if (e.key !== "Enter") return;
+    if (!/\w/.test(name)) return;
+    e.preventDefault();
+    setStoredName(name);
   };
 
   const handleChange: React.ComponentProps<"input">["onChange"] = (e) => {
@@ -30,6 +35,7 @@ const Login = ({ setStoredName }: LoginProps) => {
       <FormControl isRequired color="white" width={300}>
         <FormLabel>Enter your name</FormLabel>
         <Input
+          ref={inputRef}
           type="text"
           value={name}
           onChange={handleChange}
