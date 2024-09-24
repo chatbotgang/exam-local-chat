@@ -1,6 +1,8 @@
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import useStorage from "./hooks/useStorage";
 import ChatRoom from "./pages/ChatRoom";
 import Login from "./pages/Login";
+import theme from "./theme";
 import { StorageKey, StorageType } from "./types";
 
 function App() {
@@ -11,14 +13,15 @@ function App() {
   );
 
   return (
-    <>
-      <h1>Local Chat App</h1>
-      {storedName ? (
-        <ChatRoom storedName={storedName} />
-      ) : (
-        <Login setStoredName={setStoredName} />
-      )}
-    </>
+    <ChakraProvider theme={theme}>
+      <Box bg="grey.700">
+        {storedName ? (
+          <ChatRoom storedName={storedName} />
+        ) : (
+          <Login setStoredName={setStoredName} />
+        )}
+      </Box>
+    </ChakraProvider>
   );
 }
 

@@ -36,7 +36,7 @@ const ChatRoom = ({ storedName }: { storedName: string }) => {
 
   return (
     <>
-      <MessageList messages={storedMessages} />
+      <MessageList currentUser={storedName} messages={storedMessages} />
       <MessageInput onSendMessage={handleSendMessage} />
     </>
   );

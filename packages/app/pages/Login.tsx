@@ -1,3 +1,10 @@
+import {
+  Center,
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  Input,
+} from "@chakra-ui/react";
 import { useState } from "react";
 
 interface LoginProps {
@@ -19,14 +26,24 @@ const Login = ({ setStoredName }: LoginProps) => {
   };
 
   return (
-    <input
-      type="text"
-      value={name}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown}
-      placeholder="Enter your name"
-      required
-    />
+    // <Flex align="center" justify="center" minHeight="100vh">
+    <Center minHeight="100vh" color="white">
+      <FormControl isRequired color="white" width={300}>
+        <FormLabel>Enter your name</FormLabel>
+        <Input
+          type="text"
+          value={name}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder="Enter your name"
+          required
+          maxLength={30}
+        />
+        <FormHelperText>
+          After entering you can join the chatroom.
+        </FormHelperText>
+      </FormControl>
+    </Center>
   );
 };
 

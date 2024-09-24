@@ -20,8 +20,11 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.1",
+    "@chakra-ui/react": "^2.8.2",
     "@commitlint/cli": "^19.4.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@eslint-react/eslint-plugin": "^1.5.16",
     "@eslint/compat": "^1.1.1",
     "@exam/app": "workspace:*",
