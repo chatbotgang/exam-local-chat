@@ -23,7 +23,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div style={{ position: "fixed", bottom: 0 }}>
+    <div data-testid="message-input" style={{ position: "fixed", bottom: 0 }}>
       <Textarea
         width="100vw"
         value={message}

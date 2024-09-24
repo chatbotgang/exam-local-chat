@@ -11,7 +11,7 @@ const MessageItem = ({ message, isCurrentUser }: MessageItemProps) => {
   return (
     <Flex alignItems={isCurrentUser ? "end" : "start"} m={4} direction="column">
       <Text fontSize="sm" color="grey.500">
-        {message.userName}:{" "}
+        {message.userName}:
       </Text>
       <Flex justify="space-between" color="grey.500" alignItems="end" gap={2}>
         <Box
