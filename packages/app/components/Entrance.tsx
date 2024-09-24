@@ -1,23 +1,19 @@
 import { Box, Button, TextField } from "@mui/material";
 import { nanoid } from "nanoid";
-import type { Dispatch, FC, SetStateAction } from "react";
+import type { FC } from "react";
 import { useState } from "react";
+import useLocalUserStore from "../stores/useLocalUserStore";
 import { ChatMessageType } from "../types/message";
 import { broadCastChatMessage } from "../utils/broadcastChannel";
-import { storeLocalUsername } from "../utils/window";
 import Layout from "./Layout";
 
-interface EntranceProps {
-  setLocalUsername: Dispatch<SetStateAction<string>>;
-}
-
-const Entrance: FC<EntranceProps> = ({ setLocalUsername }) => {
+const Entrance: FC = () => {
   const [username, setUsername] = useState("");
+  const setLocalUsername = useLocalUserStore((state) => state.setLocalUsername);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim()) {
-      storeLocalUsername(username);
       setLocalUsername(username);
       broadCastChatMessage({
         id: nanoid(),

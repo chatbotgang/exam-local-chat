@@ -3,17 +3,16 @@ import { nanoid } from "nanoid";
 import type { FC, KeyboardEvent } from "react";
 import { useEffect, useState } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
+import useLocalUserStore from "../../stores/useLocalUserStore";
 import { type ChatMessage, ChatMessageType } from "../../types/message";
 import channel, { broadCastChatMessage } from "../../utils/broadcastChannel";
 import { getStoredChatMessages, storeChatMessages } from "../../utils/window";
 import Layout from "../Layout";
 import Message from "./Message";
 
-interface ChatRoomProps {
-  localUsername: string;
-}
+const ChatRoom: FC = () => {
+  const localUsername = useLocalUserStore((state) => state.localUsername);
 
-const ChatRoom: FC<ChatRoomProps> = ({ localUsername }) => {
   const [inputMessage, setInputMessage] = useState("");
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() =>
     getStoredChatMessages(),

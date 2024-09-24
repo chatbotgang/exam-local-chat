@@ -1,20 +1,16 @@
 import type { FC } from "react";
-import { useState } from "react";
 import ChatRoom from "./components/ChatRoom";
 import Entrance from "./components/Entrance";
-import { getStoredLocalUsername } from "./utils/window";
+import useLocalUserStore from "./stores/useLocalUserStore";
 
 const App: FC = () => {
-  const [localUsername, setLocalUsername] = useState(() =>
-    getStoredLocalUsername(),
-  );
-
+  const localUsername = useLocalUserStore((state) => state.localUsername);
   const isJoined = Boolean(localUsername);
 
   if (!isJoined) {
-    return <Entrance setLocalUsername={setLocalUsername} />;
+    return <Entrance />;
   }
-  return <ChatRoom localUsername={localUsername} />;
+  return <ChatRoom />;
 };
 
 export default App;
