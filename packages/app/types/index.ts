@@ -1,5 +1,6 @@
 export interface MessageType {
-  user: string;
+  user?: string;
   timestamp: number;
   message: string;
+  system?: boolean;
 }
