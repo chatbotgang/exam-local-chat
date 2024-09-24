@@ -7,14 +7,14 @@ interface LoginProps {
 const Login = ({ setStoredName }: LoginProps) => {
   const [name, setName] = useState("");
 
-  const handleNameKeyDown: React.ComponentProps<"input">["onKeyDown"] = (e) => {
+  const handleKeyDown: React.ComponentProps<"input">["onKeyDown"] = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       setStoredName(name);
     }
   };
 
-  const handleNameChange: React.ComponentProps<"input">["onChange"] = (e) => {
+  const handleChange: React.ComponentProps<"input">["onChange"] = (e) => {
     setName(e.target.value);
   };
 
@@ -22,8 +22,8 @@ const Login = ({ setStoredName }: LoginProps) => {
     <input
       type="text"
       value={name}
-      onChange={handleNameChange}
-      onKeyDown={handleNameKeyDown}
+      onChange={handleChange}
+      onKeyDown={handleKeyDown}
       placeholder="Enter your name"
       required
     />
