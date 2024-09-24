@@ -1,5 +1,5 @@
 import { Textarea } from "@chakra-ui/react";
-import { useState } from "react";
+import { memo, useState } from "react";
 
 interface MessageInputProps {
   onSendMessage: (content: string) => void;
@@ -38,4 +38,4 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
     </div>
   );
 };
-export default MessageInput;
+export default memo(MessageInput);

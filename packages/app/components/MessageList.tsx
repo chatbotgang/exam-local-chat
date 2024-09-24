@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
-import type { Message } from "../types";
-import MessageItem from "./MessageItem";
+import MessageItem from "../components/MessageItem";
+import SystemMessage from "../components/SystemMessage";
+import type { Message, SystemText } from "../types";
 
 interface MessageListProps {
   currentUser: string;
@@ -21,13 +22,17 @@ const MessageList = ({ currentUser, messages }: MessageListProps) => {
         overflowY: "auto",
       }}
     >
-      {messages.map((message: Message) => (
-        <MessageItem
-          key={message.id}
-          message={message}
-          isCurrentUser={currentUser === message.userName}
-        />
-      ))}
+      {messages.map((message: Message | SystemText) =>
+        message.type === "message" ? (
+          <MessageItem
+            key={message.id}
+            message={message}
+            isCurrentUser={currentUser === message.userName}
+          />
+        ) : (
+          <SystemMessage key={message.id} message={message} />
+        ),
+      )}
 
       <div ref={messagesEndRef} />
     </div>

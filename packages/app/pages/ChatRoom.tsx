@@ -1,38 +1,58 @@
 import { memo, useEffect } from "react";
 import MessageInput from "../components/MessageInput";
 import MessageList from "../components/MessageList";
-import useStorage from "../hooks/useStorage";
-import type { Message } from "../types";
-import { StorageKey } from "../types";
-
-const CHANNEL_NAME = "broadcast-messages";
+import useMessage from "../hooks/useMessage";
+import type { Message, SystemText, getMessageProps } from "../types";
 
 const ChatRoom = ({ storedName }: { storedName: string }) => {
-  const [storedMessages, setStoredMessages] = useStorage(
-    StorageKey.Messages,
-    [],
-  );
+  const { sendMessage, storedMessages, canPostMessage } = useMessage();
+
+  const getMessage = ({
+    type,
+    content = "",
+  }: getMessageProps): Message | SystemText => {
+    switch (type) {
+      case "NEW_MESSAGE":
+        return {
+          type: "message",
+          id: Date.now().toString(),
+          userName: storedName,
+          content,
+          timestamp: Date.now(),
+        };
+      case "USER_JOINED":
+        return {
+          type: "system",
+          id: `joined${Date.now().toString()}`,
+          content: `${storedName} joined`,
+        };
+      case "USER_LEFT":
+        return {
+          type: "system",
+          id: `left${Date.now().toString()}`,
+          content: `${storedName} left`,
+        };
+    }
+  };
 
   const handleSendMessage = (content: string) => {
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      userName: storedName,
-      content,
-      timestamp: Date.now(),
-    };
-    const channel = new BroadcastChannel(CHANNEL_NAME);
-    channel.postMessage(newMessage);
+    sendMessage(getMessage({ type: "NEW_MESSAGE", content }));
+  };
+  const handleRoomLeft = () => {
+    sendMessage(getMessage({ type: "USER_LEFT" }));
   };
 
   useEffect(() => {
-    const channel = new BroadcastChannel(CHANNEL_NAME);
-    channel.onmessage = (e) => {
-      setStoredMessages((prevState: Message[]) => [...prevState, e.data]);
-    };
+    if (canPostMessage) {
+      sendMessage(getMessage({ type: "USER_JOINED" }));
+    }
+
+    window.addEventListener("beforeunload", handleRoomLeft);
     return () => {
-      channel.close();
+      window.removeEventListener("beforeunload", handleRoomLeft);
     };
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canPostMessage]);
 
   return (
     <>
