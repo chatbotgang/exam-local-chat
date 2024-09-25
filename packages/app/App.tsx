@@ -68,6 +68,12 @@ function App() {
           messages={messages}
           setMessages={message => {
             socket.emit('sendMessage', message);
+          }}
+          onExit={() => {
+            setIsLogin(false);
+            localStorage.removeItem('username');
+            setUsername('');
+            socket.emit('disconnection');
           }} />
         : <UsernameBox
           username={username}
