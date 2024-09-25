@@ -14,20 +14,20 @@ function App() {
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
 
   useEffect(() => {
-    socket.on('userJoined', (username) => {
-      setMessages(prev => [...prev, {
-        timestamp: Date.now(), message: `${username} has joined the chat`, system: true
-      }]);
+    socket.on('userJoined', (message) => {
+      setMessages(prev => [...prev, message]);
     });
 
-    socket.on('userLeft', (username) => {
-      setMessages(prev => [...prev, {
-        timestamp: Date.now(), message: `${username} has left the chat`, system: true
-      }]);
+    socket.on('userLeft', (message) => {
+      setMessages(prev => [...prev, message]);
     });
 
     socket.on('receiveMessage', (message) => {
       setMessages(prev => [...prev, message]);
+    });
+
+    socket.on('syncMessages', (messages) => {
+      setMessages(messages);
     });
 
     return () => {
