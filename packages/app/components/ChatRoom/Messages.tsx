@@ -1,24 +1,25 @@
-import { Stack, Typography } from "@mui/material";
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import { Button, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import type { MessageType } from "../../types";
 
 const Messages = ({ messages }: { messages: MessageType[] }) => {
   const messageEndRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const [isBottom, setIsBottom] = useState(false);
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
     if (messages[messages.length - 1]?.user === localStorage.getItem('username')
-      || isBottom)
+      || isAtBottom)
       messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, isBottom]);
+  }, [messages, isAtBottom]);
 
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView();
+    messageEndRef.current?.scrollIntoView({ behavior: 'auto' });
 
     observerRef.current = new IntersectionObserver(([entry]) => {
       if (entry)
-        setIsBottom(entry?.isIntersecting);
+        setIsAtBottom(entry?.isIntersecting);
     });
   }, []);
 
@@ -36,20 +37,40 @@ const Messages = ({ messages }: { messages: MessageType[] }) => {
       {messages.map(({ user, timestamp, message, system }) => (
         <Stack key={timestamp} spacing={1}>
           {!system
-            ? <>
-              <Typography color="#FFFFFF">
-                {user} {Intl.DateTimeFormat('default', { timeStyle: 'medium', hourCycle: 'h24' }).format(timestamp)}
-              </Typography>
+            ? <Stack width={1} alignItems={user === localStorage.getItem('username') ? 'end' : 'start'}>
               <Stack bgcolor='#888888' borderRadius={1} p={1} width='fit-content'>
                 <Typography color="#FFFFFF" whiteSpace='pre'>
                   {message}
                 </Typography>
               </Stack>
-            </>
-            : <Typography color="#FFFFFF">{message}</Typography>}
+              <Typography color="#FFFFFF" fontSize={14}>
+                {user === localStorage.getItem('username') ? 'You' : user} {Intl.DateTimeFormat('default', { timeStyle: 'medium', hourCycle: 'h24' }).format(timestamp)}
+              </Typography>
+            </Stack>
+            : <Stack width={1} alignItems='center'>
+              <Stack border='0.5px solid #888888' borderRadius={1} p={1} width='fit-content'
+                textAlign='center'>
+                <Typography color="#FFFFFF" fontSize={14}>
+                  {Intl.DateTimeFormat('default', { timeStyle: 'medium', hourCycle: 'h24' }).format(timestamp)}
+                </Typography>
+                <Typography color="#FFFFFF" fontSize={14}>{message}</Typography>
+              </Stack>
+            </Stack>}
         </Stack>
       ))}
+
       <Stack style={{ marginTop: 0 }} ref={messageEndRef} />
+
+      {!isAtBottom &&
+        <Button sx={{
+          position: 'fixed', bottom: 80, left: 20,
+          bgcolor: '#888888', borderRadius: 1, color: '#FFFFFF',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}
+          onClick={() => messageEndRef.current?.scrollIntoView({ behavior: 'instant' })}>
+          <Typography color="#FFFFFF" fontSize={12}>Go to bottom</Typography>
+          <KeyboardDoubleArrowDownIcon fontSize='small' />
+        </Button>}
     </Stack>
   );
 }
