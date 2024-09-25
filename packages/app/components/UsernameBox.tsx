@@ -8,7 +8,7 @@ const UsernameBox = ({ username, setUsername, setIsLogin }: {
   return (
     <Stack width={1} height='calc(100% - 48px)' alignItems='center' justifyContent='center'>
       <Stack minWidth={300} spacing={1} padding={2}
-        bgcolor='#191919'
+        bgcolor='primary.dark'
         border='0.5px solid #888888' borderRadius={2}>
         <Typography color="#FFFFFF">Username</Typography>
         <TextField

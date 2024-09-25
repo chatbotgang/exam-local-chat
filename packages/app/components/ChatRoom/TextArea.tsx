@@ -7,16 +7,8 @@ const StyledTextArea = styled(TextareaAutosize)`
   border-radius: 8px;
   padding: 16px;
   resize: none;
-  background: #000000;
-  color: #ffffff;
   font-family: Arial, sans-serif;
   font-size: 16px;
-  ::placeholder {
-      color: #888888;
-    };
-  :focus, :hover {
-  background: #000000;
-  }
 `;
 
 const TextArea = ({ setMessage, onExit }: {
@@ -33,6 +25,14 @@ const TextArea = ({ setMessage, onExit }: {
       </Button>
       <StyledTextArea
         minRows={1}
+        sx={{
+          color: 'text.primary',
+          bgcolor: 'primary.main',
+          '&:hover,&:focus': { bgcolor: 'primary.main' },
+          '&::placeholder': {
+            color: 'primary.light'
+          }
+        }}
         placeholder="Type a message..."
         value={text}
         onChange={({ target: { value } }) => setText(value)}

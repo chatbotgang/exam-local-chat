@@ -38,22 +38,22 @@ const Messages = ({ messages }: { messages: MessageType[] }) => {
         <Stack key={timestamp} spacing={1}>
           {!system
             ? <Stack width={1} alignItems={user === localStorage.getItem('username') ? 'end' : 'start'}>
-              <Stack bgcolor='#888888' borderRadius={1} p={1} width='fit-content'>
-                <Typography color="#FFFFFF" whiteSpace='pre'>
+              <Stack bgcolor='primary.light' borderRadius={1} p={1} width='fit-content'>
+                <Typography color="text.secondary" whiteSpace='pre'>
                   {message}
                 </Typography>
               </Stack>
-              <Typography color="#FFFFFF" fontSize={14}>
+              <Typography color="text.primary" fontSize={14}>
                 {user === localStorage.getItem('username') ? 'You' : user} {Intl.DateTimeFormat('default', { timeStyle: 'medium', hourCycle: 'h24' }).format(timestamp)}
               </Typography>
             </Stack>
             : <Stack width={1} alignItems='center'>
               <Stack border='0.5px solid #888888' borderRadius={1} p={1} width='fit-content'
                 textAlign='center'>
-                <Typography color="#FFFFFF" fontSize={14}>
+                <Typography color="text.primary" fontSize={14}>
                   {Intl.DateTimeFormat('default', { timeStyle: 'medium', hourCycle: 'h24' }).format(timestamp)}
                 </Typography>
-                <Typography color="#FFFFFF" fontSize={14}>{message}</Typography>
+                <Typography color="text.primary" fontSize={14}>{message}</Typography>
               </Stack>
             </Stack>}
         </Stack>
