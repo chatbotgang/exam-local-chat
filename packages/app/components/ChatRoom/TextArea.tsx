@@ -11,41 +11,48 @@ const StyledTextArea = styled(TextareaAutosize)`
   font-size: 16px;
 `;
 
-const TextArea = ({ setMessage, onExit }: {
+const TextArea = ({
+  setMessage,
+  onExit,
+}: {
   setMessage: (value: MessageType) => void;
   onExit: () => void;
 }) => {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
 
   return (
-    <Stack width={1} spacing={1} direction='row'>
-      <Button sx={{ color: 'red' }}
-        onClick={onExit}>
+    <Stack width={1} spacing={1} direction="row">
+      <Button sx={{ color: "red" }} onClick={onExit}>
         Exit
       </Button>
       <StyledTextArea
         minRows={1}
         sx={{
-          color: 'text.primary',
-          bgcolor: 'primary.main',
-          '&:hover,&:focus': { bgcolor: 'primary.main' },
-          '&::placeholder': {
-            color: 'primary.light'
-          }
+          color: "text.primary",
+          bgcolor: "primary.main",
+          "&:hover,&:focus": { bgcolor: "primary.main" },
+          "&::placeholder": {
+            color: "primary.light",
+          },
         }}
         placeholder="Type a message..."
         value={text}
         onChange={({ target: { value } }) => setText(value)}
-        onKeyDown={e => {
-          if (e.key === 'Enter' && !e.shiftKey) {
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
             e.preventDefault();
-            if (text.trim() === '') return;
-            setMessage({ user: localStorage.getItem('username') || '', timestamp: Date.now(), message: text });
-            setText('');
+            if (text.trim() === "") return;
+            setMessage({
+              user: localStorage.getItem("username") || "",
+              timestamp: Date.now(),
+              message: text,
+            });
+            setText("");
           }
         }}
       />
-    </Stack>);
-}
+    </Stack>
+  );
+};
 
 export default TextArea;
