@@ -13,8 +13,8 @@ const socket = io('http://localhost:5174');
 function App() {
   const localMessages = JSON.parse(localStorage.getItem('messages') || '[]') as MessageType[];
   const [messages, setMessages] = useState<MessageType[]>(localMessages);
-  const [isLogin, setIsLogin] = useState(!!localStorage.getItem('username'));
-  const [username, setUsername] = useState(localStorage.getItem('username') || '');
+  const [isLogin, setIsLogin] = useState(!!sessionStorage.getItem('username'));
+  const [username, setUsername] = useState(sessionStorage.getItem('username') || '');
   const [isDarkMode, setIsDarkMode] = useState(localStorage.getItem('isDarkMode') === 'true');
 
   useEffect(() => {
@@ -74,7 +74,7 @@ function App() {
             }}
             onExit={() => {
               setIsLogin(false);
-              localStorage.removeItem('username');
+              sessionStorage.removeItem('username');
               setUsername('');
               socket.emit('disconnection');
             }} />

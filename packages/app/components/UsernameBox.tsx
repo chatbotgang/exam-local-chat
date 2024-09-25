@@ -38,7 +38,7 @@ const UsernameBox = ({
             if (e.key === "Enter" && !e.nativeEvent.isComposing) {
               e.preventDefault();
               if (username.trim() === "") return;
-              localStorage.setItem("username", username);
+              sessionStorage.setItem("username", username);
               setIsLogin(true);
             }
           }}

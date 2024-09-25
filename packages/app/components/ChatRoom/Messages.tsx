@@ -9,7 +9,7 @@ const Messages = ({ messages }: { messages: MessageType[] }) => {
   const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
-    if (messages[messages.length - 1]?.user === localStorage.getItem('username')
+    if (messages[messages.length - 1]?.user === sessionStorage.getItem('username')
       || isAtBottom)
       messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isAtBottom]);
@@ -37,14 +37,14 @@ const Messages = ({ messages }: { messages: MessageType[] }) => {
       {messages.map(({ user, timestamp, message, system }) => (
         <Stack key={timestamp} spacing={1}>
           {!system
-            ? <Stack width={1} alignItems={user === localStorage.getItem('username') ? 'end' : 'start'}>
+            ? <Stack width={1} alignItems={user === sessionStorage.getItem('username') ? 'end' : 'start'}>
               <Stack bgcolor='primary.light' borderRadius={1} p={1} width='fit-content'>
                 <Typography color="text.secondary" whiteSpace='pre'>
                   {message}
                 </Typography>
               </Stack>
               <Typography color="text.primary" fontSize={14}>
-                {user === localStorage.getItem('username') ? 'You' : user} {Intl.DateTimeFormat('default', { timeStyle: 'medium', hourCycle: 'h24' }).format(timestamp)}
+                {user === sessionStorage.getItem('username') ? 'You' : user} {Intl.DateTimeFormat('default', { timeStyle: 'medium', hourCycle: 'h24' }).format(timestamp)}
               </Typography>
             </Stack>
             : <Stack width={1} alignItems='center'>

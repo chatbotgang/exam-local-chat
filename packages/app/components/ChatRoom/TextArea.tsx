@@ -43,7 +43,7 @@ const TextArea = ({
             e.preventDefault();
             if (text.trim() === "") return;
             setMessage({
-              user: localStorage.getItem("username") || "",
+              user: sessionStorage.getItem("username") || "",
               timestamp: Date.now(),
               message: text,
             });
