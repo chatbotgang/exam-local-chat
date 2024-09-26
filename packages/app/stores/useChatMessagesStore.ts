@@ -23,15 +23,15 @@ export const useChatMessagesStore = create<ChatMessagesState>((set) => ({
       username,
       message,
     };
-    set((state) => {
-      const updatedMessages = [...state.chatMessages, newMessage];
-      storeChatMessages(updatedMessages);
-      return { chatMessages: updatedMessages };
-    });
+    set((state) => ({ chatMessages: [...state.chatMessages, newMessage] }));
     broadCastChatMessage(newMessage);
   },
   receiveChatMessage: (message: ChatMessage) => {
-    set((state) => ({ chatMessages: [...state.chatMessages, message] }));
+    set((state) => {
+      const updatedMessages = [...state.chatMessages, message];
+      storeChatMessages(updatedMessages);
+      return { chatMessages: updatedMessages };
+    });
   },
 }));
 
