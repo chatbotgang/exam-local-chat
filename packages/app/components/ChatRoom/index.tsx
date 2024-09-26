@@ -1,5 +1,4 @@
 import { Box, TextField } from "@mui/material";
-import { nanoid } from "nanoid";
 import type { FC, KeyboardEvent } from "react";
 import { useEffect, useState } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
@@ -7,7 +6,7 @@ import useChatMessagesStore from "../../stores/useChatMessagesStore";
 import useLocalUserStore from "../../stores/useLocalUserStore";
 import type { ChatMessageWithoutIdAndTimestamp } from "../../types/message";
 import { ChatMessageType } from "../../types/message";
-import channel, { broadCastChatMessage } from "../../utils/broadcastChannel";
+import channel from "../../utils/broadcastChannel";
 import Layout from "../Layout";
 import Message from "./Message";
 
@@ -60,19 +59,16 @@ const ChatRoom: FC = () => {
 
   useEffect(() => {
     const handleLeave = () => {
-      broadCastChatMessage({
-        id: nanoid(),
+      sendChatMessage({
         type: ChatMessageType.Left,
-        timestamp: Date.now(),
         username: localUsername,
       });
     };
-
     window.addEventListener("beforeunload", handleLeave);
     return () => {
       window.removeEventListener("beforeunload", handleLeave);
     };
-  }, [localUsername]);
+  }, [localUsername, sendChatMessage]);
 
   return (
     <Layout title="輸入訊息，隨性交流">
