@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import type { FC } from "react";
 import { type ChatMessage, ChatMessageType } from "../../types/message";
+import { convertTimestampToLocalTime } from "../../utils/time";
 
 interface MessageProps {
   localUsername: string;
@@ -18,6 +19,7 @@ const Message: FC<MessageProps> = ({ localUsername, chatMessage }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: isLocalUserMessage ? "flex-end" : "flex-start",
+        margin: "12px 0",
       }}
     >
       {!isLocalUserMessage && (
@@ -31,7 +33,7 @@ const Message: FC<MessageProps> = ({ localUsername, chatMessage }) => {
           color: "white",
           padding: "8px 12px",
           borderRadius: "8px",
-          margin: "8px 0",
+          margin: "4px 0",
           maxWidth: "85%",
         }}
       >
@@ -42,11 +44,25 @@ const Message: FC<MessageProps> = ({ localUsername, chatMessage }) => {
           {chatMessage.message}
         </Typography>
       </Box>
+      <Typography variant="caption" sx={{ margin: "0 2px" }}>
+        {convertTimestampToLocalTime(chatMessage.timestamp)}
+      </Typography>
     </Box>
   ) : (
-    <Box sx={{ margin: "4px 0" }}>
-      <Typography variant="body1" align="center" sx={{ fontStyle: "italic" }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "4px 0",
+        fontStyle: "italic",
+      }}
+    >
+      <Typography variant="body1">
         {`${chatMessage.username} ${chatMessage.type}`}
+      </Typography>
+      <Typography variant="caption" sx={{ margin: "0 8px" }}>
+        {convertTimestampToLocalTime(chatMessage.timestamp)}
       </Typography>
     </Box>
   );
