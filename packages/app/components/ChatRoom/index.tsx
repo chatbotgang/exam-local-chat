@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import useChatMessagesStore from "../../stores/useChatMessagesStore";
 import useLocalUserStore from "../../stores/useLocalUserStore";
+import useParticipantCountsStore from "../../stores/useParticipantCountsStore";
 import type { ChatMessageWithoutIdAndTimestamp } from "../../types/message";
 import { ChatMessageType } from "../../types/message";
 import channel from "../../utils/broadcastChannel";
@@ -19,6 +20,13 @@ const ChatRoom: FC = () => {
   const receiveChatMessage = useChatMessagesStore(
     (state) => state.receiveChatMessage,
   );
+
+  const {
+    addParticipant,
+    removeParticipant,
+    checkIsFirstJoin,
+    checkIsLastLeave,
+  } = useParticipantCountsStore();
 
   const isSentJoinedMessageRef = useRef<boolean>(false);
 
@@ -62,25 +70,31 @@ const ChatRoom: FC = () => {
   useEffect(() => {
     if (!isSentJoinedMessageRef.current) {
       isSentJoinedMessageRef.current = true;
-      sendChatMessage({
-        type: ChatMessageType.Joined,
-        username: localUsername,
-      });
+      if (checkIsFirstJoin(localUsername)) {
+        sendChatMessage({
+          type: ChatMessageType.Joined,
+          username: localUsername,
+        });
+      }
+      addParticipant(localUsername);
     }
-  }, [localUsername, sendChatMessage]);
+  }, [localUsername, sendChatMessage, checkIsFirstJoin, addParticipant]);
 
   useEffect(() => {
     const handleLeave = () => {
-      sendChatMessage({
-        type: ChatMessageType.Left,
-        username: localUsername,
-      });
+      if (checkIsLastLeave(localUsername)) {
+        sendChatMessage({
+          type: ChatMessageType.Left,
+          username: localUsername,
+        });
+      }
+      removeParticipant(localUsername);
     };
     window.addEventListener("beforeunload", handleLeave);
     return () => {
       window.removeEventListener("beforeunload", handleLeave);
     };
-  }, [localUsername, sendChatMessage]);
+  }, [localUsername, sendChatMessage, checkIsLastLeave, removeParticipant]);
 
   return (
     <Layout title="輸入訊息，隨性交流">
