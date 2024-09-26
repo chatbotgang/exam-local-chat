@@ -21,7 +21,9 @@ const Message: FC<MessageProps> = ({ localUsername, chatMessage }) => {
       }}
     >
       {!isLocalUserMessage && (
-        <Typography variant="h6">{username}: </Typography>
+        <Typography variant="body2" sx={{ margin: "0 2px" }}>
+          {username}
+        </Typography>
       )}
       <Box
         sx={{
