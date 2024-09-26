@@ -104,7 +104,7 @@ const ChatRoom: FC = () => {
             chatMessage={chatMessage}
           />
         ))}
-        <div ref={messagesEndRef} />
+        <div ref={messagesEndRef} style={{ height: "1px" }} />
       </Box>
       <Box
         component="form"
