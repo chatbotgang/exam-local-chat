@@ -1,6 +1,6 @@
 import { Box, TextField } from "@mui/material";
 import type { FC, KeyboardEvent } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import useChatMessagesStore from "../../stores/useChatMessagesStore";
 import useLocalUserStore from "../../stores/useLocalUserStore";
@@ -19,6 +19,8 @@ const ChatRoom: FC = () => {
   const receiveChatMessage = useChatMessagesStore(
     (state) => state.receiveChatMessage,
   );
+
+  const isSentJoinedMessageRef = useRef<boolean>(false);
 
   const [inputMessage, setInputMessage] = useState("");
   const [shouldAutoScrollToBottom, setShouldAutoScrollToBottom] =
@@ -56,6 +58,16 @@ const ChatRoom: FC = () => {
       channel.onmessage = null;
     };
   }, [receiveChatMessage]);
+
+  useEffect(() => {
+    if (!isSentJoinedMessageRef.current) {
+      isSentJoinedMessageRef.current = true;
+      sendChatMessage({
+        type: ChatMessageType.Joined,
+        username: localUsername,
+      });
+    }
+  }, [localUsername, sendChatMessage]);
 
   useEffect(() => {
     const handleLeave = () => {

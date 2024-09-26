@@ -1,24 +1,17 @@
 import { Box, Button, TextField } from "@mui/material";
 import type { FC } from "react";
 import { useState } from "react";
-import useChatMessagesStore from "../stores/useChatMessagesStore";
 import useLocalUserStore from "../stores/useLocalUserStore";
-import { ChatMessageType } from "../types/message";
 import Layout from "./Layout";
 
 const Entrance: FC = () => {
   const [username, setUsername] = useState("");
   const setLocalUsername = useLocalUserStore((state) => state.setLocalUsername);
-  const sendChatMessage = useChatMessagesStore(
-    (state) => state.sendChatMessage,
-  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim()) {
       setLocalUsername(username);
-
-      sendChatMessage({ type: ChatMessageType.Joined, username });
     }
   };
 
