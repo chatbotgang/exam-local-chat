@@ -11,3 +11,8 @@ export interface ChatMessage {
   username: string;
   message?: string;
 }
+
+export type ChatMessageWithoutIdAndTimestamp = Omit<
+  ChatMessage,
+  "id" | "timestamp"
+>;

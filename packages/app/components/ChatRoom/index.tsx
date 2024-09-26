@@ -3,23 +3,28 @@ import { nanoid } from "nanoid";
 import type { FC, KeyboardEvent } from "react";
 import { useEffect, useState } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
+import useChatMessagesStore from "../../stores/useChatMessagesStore";
 import useLocalUserStore from "../../stores/useLocalUserStore";
-import { type ChatMessage, ChatMessageType } from "../../types/message";
+import type { ChatMessageWithoutIdAndTimestamp } from "../../types/message";
+import { ChatMessageType } from "../../types/message";
 import channel, { broadCastChatMessage } from "../../utils/broadcastChannel";
-import { getStoredChatMessages, storeChatMessages } from "../../utils/window";
 import Layout from "../Layout";
 import Message from "./Message";
 
 const ChatRoom: FC = () => {
   const localUsername = useLocalUserStore((state) => state.localUsername);
-
-  const [inputMessage, setInputMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() =>
-    getStoredChatMessages(),
+  const chatMessages = useChatMessagesStore((state) => state.chatMessages);
+  const sendChatMessage = useChatMessagesStore(
+    (state) => state.sendChatMessage,
+  );
+  const receiveChatMessage = useChatMessagesStore(
+    (state) => state.receiveChatMessage,
   );
 
+  const [inputMessage, setInputMessage] = useState("");
   const [shouldAutoScrollToBottom, setShouldAutoScrollToBottom] =
     useState(true);
+
   const { rootRef: chatBoxRef, targetRef: messagesEndRef } =
     useIntersectionObserver<HTMLDivElement>({
       onIntersect: (isIntersecting) =>
@@ -35,30 +40,23 @@ const ChatRoom: FC = () => {
   const handleSendMessage = (e: KeyboardEvent) => {
     if (e.key === "Enter" && inputMessage.trim() && !e.shiftKey) {
       e.preventDefault();
-      const newMessage: ChatMessage = {
-        id: nanoid(),
-        timestamp: Date.now(),
+      const newMessage: ChatMessageWithoutIdAndTimestamp = {
         type: ChatMessageType.Text,
         username: localUsername,
         message: inputMessage,
       };
-      setChatMessages((prev) => [...prev, newMessage]);
+      sendChatMessage(newMessage);
       setInputMessage("");
-      broadCastChatMessage(newMessage);
       setShouldAutoScrollToBottom(true);
     }
   };
 
-  // To make sure will store latest messages and handle side effect(localStorage) so using useEffect
-  // will be improve it's performance in following commits
   useEffect(() => {
-    storeChatMessages(chatMessages);
-  }, [chatMessages]);
-
-  useEffect(() => {
-    channel.onmessage = (event) =>
-      setChatMessages((prev) => [...prev, event.data]);
-  }, []);
+    channel.onmessage = (event) => receiveChatMessage(event.data);
+    return () => {
+      channel.onmessage = null;
+    };
+  }, [receiveChatMessage]);
 
   useEffect(() => {
     const handleLeave = () => {
