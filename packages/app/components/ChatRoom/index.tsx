@@ -1,6 +1,6 @@
 import { Box, TextField } from "@mui/material";
-import type { FC, KeyboardEvent } from "react";
-import { useEffect, useRef, useState } from "react";
+import type { ChangeEvent, FC, KeyboardEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import useChatMessagesStore from "../../stores/useChatMessagesStore";
 import useLocalUserStore from "../../stores/useLocalUserStore";
@@ -29,10 +29,35 @@ const ChatRoom: FC = () => {
   } = useParticipantCountsStore();
 
   const isSentJoinedMessageRef = useRef<boolean>(false);
+  const textInputRef = useRef<HTMLInputElement>(null);
 
-  const [inputMessage, setInputMessage] = useState("");
   const [shouldAutoScrollToBottom, setShouldAutoScrollToBottom] =
     useState(true);
+
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    if (textInputRef.current) {
+      textInputRef.current.value = e.target.value;
+    }
+  }, []);
+
+  const handleSendMessage = (e: KeyboardEvent) => {
+    if (
+      e.key === "Enter" &&
+      textInputRef.current &&
+      textInputRef.current.value.trim() &&
+      !e.shiftKey
+    ) {
+      e.preventDefault();
+      const newMessage: ChatMessageWithoutIdAndTimestamp = {
+        type: ChatMessageType.Text,
+        username: localUsername,
+        message: textInputRef.current.value,
+      };
+      textInputRef.current.value = "";
+      sendChatMessage(newMessage);
+      setShouldAutoScrollToBottom(true);
+    }
+  };
 
   const { rootRef: chatBoxRef, targetRef: messagesEndRef } =
     useIntersectionObserver<HTMLDivElement>({
@@ -45,20 +70,6 @@ const ChatRoom: FC = () => {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [chatMessages, shouldAutoScrollToBottom, messagesEndRef]);
-
-  const handleSendMessage = (e: KeyboardEvent) => {
-    if (e.key === "Enter" && inputMessage.trim() && !e.shiftKey) {
-      e.preventDefault();
-      const newMessage: ChatMessageWithoutIdAndTimestamp = {
-        type: ChatMessageType.Text,
-        username: localUsername,
-        message: inputMessage,
-      };
-      sendChatMessage(newMessage);
-      setInputMessage("");
-      setShouldAutoScrollToBottom(true);
-    }
-  };
 
   useEffect(() => {
     channel.onmessage = (event) => receiveChatMessage(event.data);
@@ -130,10 +141,10 @@ const ChatRoom: FC = () => {
       >
         <TextField
           multiline
+          inputRef={textInputRef}
           placeholder="輸入訊息，按 Enter 發送"
           type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
+          onChange={handleInputChange}
           onKeyDown={handleSendMessage}
           fullWidth
         />
