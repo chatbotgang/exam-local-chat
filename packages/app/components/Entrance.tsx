@@ -1,12 +1,14 @@
 import { Box, Button, TextField } from "@mui/material";
 import type { ChangeEvent, FC, FormEvent } from "react";
 import { useCallback, useRef } from "react";
-import useLocalUserStore from "../stores/useLocalUserStore";
+import useUserSessionStore from "../stores/useUserSessionStore";
 import Layout from "./Layout";
 
 const Entrance: FC = () => {
   const usernameInputRef = useRef<HTMLInputElement>(null);
-  const setLocalUsername = useLocalUserStore((state) => state.setLocalUsername);
+  const setLocalUsername = useUserSessionStore(
+    (state) => state.setLocalUsername,
+  );
 
   const handleUsernameInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {

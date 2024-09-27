@@ -1,13 +1,13 @@
 import { Box, CircularProgress } from "@mui/material";
 import type { FC } from "react";
 import { Suspense, lazy } from "react";
-import useLocalUserStore from "./stores/useLocalUserStore";
+import useUserSessionStore from "./stores/useUserSessionStore";
 
 const ChatRoom = lazy(() => import("./components/ChatRoom"));
 const Entrance = lazy(() => import("./components/Entrance"));
 
 const App: FC = () => {
-  const localUsername = useLocalUserStore((state) => state.localUsername);
+  const localUsername = useUserSessionStore((state) => state.localUsername);
   const isJoined = Boolean(localUsername);
 
   return (

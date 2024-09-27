@@ -6,7 +6,7 @@ interface UserSessionState {
   setLocalUsername: (localUsername: string) => void;
 }
 
-const useLocalUserStore = create<UserSessionState>()(
+const useUserSessionStore = create<UserSessionState>()(
   persist(
     (set) => ({
       localUsername: "",
@@ -19,4 +19,4 @@ const useLocalUserStore = create<UserSessionState>()(
   ),
 );
 
-export default useLocalUserStore;
+export default useUserSessionStore;

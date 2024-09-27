@@ -3,7 +3,7 @@ import type { Dispatch, FC, SetStateAction } from "react";
 import { useEffect } from "react";
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import useChatMessagesStore from "../../stores/useChatMessagesStore";
-import useLocalUserStore from "../../stores/useLocalUserStore";
+import useUserSessionStore from "../../stores/useUserSessionStore";
 import Message from "./Message";
 
 interface MessagesProps {
@@ -15,7 +15,7 @@ const Messages: FC<MessagesProps> = ({
   shouldAutoScrollToBottom,
   setShouldAutoScrollToBottom,
 }) => {
-  const localUsername = useLocalUserStore((state) => state.localUsername);
+  const localUsername = useUserSessionStore((state) => state.localUsername);
   const chatMessages = useChatMessagesStore((state) => state.chatMessages);
 
   const { rootRef: chatBoxRef, targetRef: messagesEndRef } =

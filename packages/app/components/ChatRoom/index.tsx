@@ -2,8 +2,8 @@ import { Box, TextField } from "@mui/material";
 import type { ChangeEvent, FC, KeyboardEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useChatMessagesStore from "../../stores/useChatMessagesStore";
-import useLocalUserStore from "../../stores/useLocalUserStore";
 import useParticipantCountsStore from "../../stores/useParticipantCountsStore";
+import useUserSessionStore from "../../stores/useUserSessionStore";
 import type { ChatMessageWithoutIdAndTimestamp } from "../../types/message";
 import { ChatMessageType } from "../../types/message";
 import channel from "../../utils/broadcastChannel";
@@ -11,7 +11,7 @@ import Layout from "../Layout";
 import Messages from "./Messages";
 
 const ChatRoom: FC = () => {
-  const localUsername = useLocalUserStore((state) => state.localUsername);
+  const localUsername = useUserSessionStore((state) => state.localUsername);
   const sendChatMessage = useChatMessagesStore(
     (state) => state.sendChatMessage,
   );
