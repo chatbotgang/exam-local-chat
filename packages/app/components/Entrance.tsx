@@ -1,5 +1,5 @@
 import { Box, Button, TextField } from "@mui/material";
-import type { ChangeEvent, FC } from "react";
+import type { ChangeEvent, FC, FormEvent } from "react";
 import { useCallback, useRef } from "react";
 import useLocalUserStore from "../stores/useLocalUserStore";
 import Layout from "./Layout";
@@ -17,7 +17,7 @@ const Entrance: FC = () => {
     [],
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (usernameInputRef.current && usernameInputRef.current.value.trim()) {
       setLocalUsername(usernameInputRef.current.value);
