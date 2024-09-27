@@ -1,16 +1,32 @@
+import { Box, CircularProgress } from "@mui/material";
 import type { FC } from "react";
-import ChatRoom from "./components/ChatRoom";
-import Entrance from "./components/Entrance";
+import { Suspense, lazy } from "react";
 import useLocalUserStore from "./stores/useLocalUserStore";
+
+const ChatRoom = lazy(() => import("./components/ChatRoom"));
+const Entrance = lazy(() => import("./components/Entrance"));
 
 const App: FC = () => {
   const localUsername = useLocalUserStore((state) => state.localUsername);
   const isJoined = Boolean(localUsername);
 
-  if (!isJoined) {
-    return <Entrance />;
-  }
-  return <ChatRoom />;
+  return (
+    <Suspense
+      fallback={
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+          height="100vh"
+        >
+          <CircularProgress />
+        </Box>
+      }
+    >
+      {isJoined ? <ChatRoom /> : <Entrance />}
+    </Suspense>
+  );
 };
 
 export default App;
