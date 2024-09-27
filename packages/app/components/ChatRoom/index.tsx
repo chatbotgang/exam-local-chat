@@ -1,7 +1,6 @@
 import { Box, TextField } from "@mui/material";
 import type { ChangeEvent, FC, KeyboardEvent } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import useChatMessagesStore from "../../stores/useChatMessagesStore";
 import useLocalUserStore from "../../stores/useLocalUserStore";
 import useParticipantCountsStore from "../../stores/useParticipantCountsStore";
@@ -9,11 +8,10 @@ import type { ChatMessageWithoutIdAndTimestamp } from "../../types/message";
 import { ChatMessageType } from "../../types/message";
 import channel from "../../utils/broadcastChannel";
 import Layout from "../Layout";
-import Message from "./Message";
+import Messages from "./Messages";
 
 const ChatRoom: FC = () => {
   const localUsername = useLocalUserStore((state) => state.localUsername);
-  const chatMessages = useChatMessagesStore((state) => state.chatMessages);
   const sendChatMessage = useChatMessagesStore(
     (state) => state.sendChatMessage,
   );
@@ -59,18 +57,6 @@ const ChatRoom: FC = () => {
     }
   };
 
-  const { rootRef: chatBoxRef, targetRef: messagesEndRef } =
-    useIntersectionObserver<HTMLDivElement>({
-      onIntersect: (isIntersecting) =>
-        setShouldAutoScrollToBottom(isIntersecting),
-    });
-
-  useEffect(() => {
-    if (shouldAutoScrollToBottom && messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [chatMessages, shouldAutoScrollToBottom, messagesEndRef]);
-
   useEffect(() => {
     channel.onmessage = (event) => receiveChatMessage(event.data);
     return () => {
@@ -109,28 +95,10 @@ const ChatRoom: FC = () => {
 
   return (
     <Layout title="輸入訊息，隨性交流">
-      <Box
-        ref={chatBoxRef}
-        sx={{
-          width: "100%",
-          flex: 1,
-          overflowY: "auto",
-          padding: "8px",
-          border: "1px solid",
-          borderColor: "primary.contrastText",
-          borderRadius: 2,
-          whiteSpace: "pre",
-        }}
-      >
-        {chatMessages.map((chatMessage) => (
-          <Message
-            key={chatMessage.id}
-            localUsername={localUsername}
-            chatMessage={chatMessage}
-          />
-        ))}
-        <div ref={messagesEndRef} style={{ height: "1px" }} />
-      </Box>
+      <Messages
+        shouldAutoScrollToBottom={shouldAutoScrollToBottom}
+        setShouldAutoScrollToBottom={setShouldAutoScrollToBottom}
+      />
       <Box
         component="form"
         sx={{
